@@ -1,6 +1,5 @@
 #pragma once
 
-#include <iostream>
 #include <chrono>
 #include <thread>
 #include <mutex>
@@ -21,7 +20,7 @@ namespace Sensor {
 
 
 ///****************************************************************************
-/// HC-SR04 - Ultrasonic
+/// HC-SR04 - Ultrasonic 2-400cm range sensor
 /// ALL HC-SR04 Sensors must be read on the same thread!
 ///****************************************************************************
 class HCSR04 : public ISensor<double> {
@@ -68,8 +67,8 @@ private:
         for (int i = HCSR04_FILTER_SIZE; i >= 0; i--) {
             double v = (i < HCSR04_FILTER_SIZE) ? _filter[i] : raw;
             if (v <= HCSR04_MAX_RANGE && v >= HCSR04_MIN_RANGE
-                && v > avg - (HCSR04_MAX_RANGE - HCSR04_MIN_RANGE) / 3
-                && v < avg + (HCSR04_MAX_RANGE - HCSR04_MIN_RANGE) / 3) {
+                && v > avg - (HCSR04_MAX_RANGE - HCSR04_MIN_RANGE) / 4
+                && v < avg + (HCSR04_MAX_RANGE - HCSR04_MIN_RANGE) / 4) {
                     total += v * i*i;
                     count += i*i;
             }
@@ -104,7 +103,6 @@ public:
         RunTimer();
         RunTimer();
         auto m = Filter(std::chrono::duration_cast<std::chrono::microseconds>(_end - _begin).count() / HCSR04_MICROSECONDS_PER_METER);
-        std::cout << m << std::endl;
         _echoPinMutex.unlock();
         return m;
     }
