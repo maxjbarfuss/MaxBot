@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
+<CodeBlocks_project_file>
+	<FileVersion major="1" minor="6" />
+	<Project>
+		<Option title="MaxBot" />
+		<Option pch_mode="2" />
+		<Option compiler="gcc" />
+		<Build>
+			<Target title="Debug">
+				<Option output="bin/Debug/MaxBot" prefix_auto="1" extension_auto="1" />
+				<Option object_output="obj/Debug/" />
+				<Option type="1" />
+				<Option compiler="gcc" />
+				<Compiler>
+					<Add option="-g" />
+				</Compiler>
+				<Linker>
+					<Add library="/home/pi/Development/MaxBotMessages/bin/Debug/libMaxBotMessages.a" />
+				</Linker>
+			</Target>
+			<Target title="Release">
+				<Option output="bin/Release/MaxBot" prefix_auto="1" extension_auto="1" />
+				<Option object_output="obj/Release/" />
+				<Option type="1" />
+				<Option compiler="gcc" />
+				<Compiler>
+					<Add option="-fomit-frame-pointer" />
+					<Add option="-fexpensive-optimizations" />
+					<Add option="-O3" />
+				</Compiler>
+				<Linker>
+					<Add option="-s" />
+					<Add library="/home/pi/Development/MaxBotMessages/bin/Release/libMaxBotMessages.so" />
+				</Linker>
+			</Target>
+		</Build>
+		<Compiler>
+			<Add option="-Wfatal-errors" />
+			<Add option="-Wall" />
+			<Add directory="/home/pi/eigen-eigen-bdd17ee3b1b3/Eigen" />
+			<Add directory="src" />
+			<Add directory="/home/pi/Development/MaxBotMessages/include" />
+			<Add directory="/home/pi/zeromq-4.1.3/include" />
+		</Compiler>
+		<Linker>
+			<Add option="-lprotobuf -lzmq" />
+		</Linker>
+		<Unit filename="src/AHRS/AHRS.hpp" />
+		<Unit filename="src/AHRS/Filter.hpp" />
+		<Unit filename="src/IO/I2CFactory.hpp" />
+		<Unit filename="src/IO/II2C.h" />
+		<Unit filename="src/IO/WiringPi/WiringPiI2C.hpp" />
+		<Unit filename="src/Publishers/IPublisher.h" />
+		<Unit filename="src/Publishers/RangeSensorPublisher.hpp" />
+		<Unit filename="src/Publishers/VectorSensorPublisher.hpp" />
+		<Unit filename="src/Sensor/IMU/ADXL345.hpp" />
+		<Unit filename="src/Sensor/IMU/BMP085.hpp" />
+		<Unit filename="src/Sensor/IMU/HMC5883L.hpp" />
+		<Unit filename="src/Sensor/IMU/L3G4200D.hpp" />
+		<Unit filename="src/Sensor/ISensor.h" />
+		<Unit filename="src/Sensor/Range/HCSR04.hpp" />
+		<Unit filename="src/main.cpp" />
+		<Extensions>
+			<code_completion />
+			<debugger />
+		</Extensions>
+	</Project>
+</CodeBlocks_project_file>

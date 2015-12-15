@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
+<CodeBlocks_layout_file>
+	<ActiveTarget name="Debug" />
+	<File name="src/AHRS/AHRS.hpp" open="0" top="0" tabpos="5">
+		<Cursor position="2153" topLine="36" />
+	</File>
+	<File name="src/AHRS/Filter.hpp" open="0" top="0" tabpos="2">
+		<Cursor position="0" topLine="0" />
+	</File>
+	<File name="src/IO/I2CFactory.hpp" open="0" top="0" tabpos="9">
+		<Cursor position="52" topLine="0" />
+	</File>
+	<File name="src/IO/II2C.h" open="0" top="0" tabpos="11">
+		<Cursor position="0" topLine="0" />
+	</File>
+	<File name="src/IO/WiringPi/WiringPiI2C.hpp" open="0" top="0" tabpos="10">
+		<Cursor position="14" topLine="0" />
+	</File>
+	<File name="src/Publishers/RangeSensorPublisher.hpp" open="0" top="0" tabpos="7">
+		<Cursor position="1018" topLine="0" />
+	</File>
+	<File name="src/Publishers/VectorSensorPublisher.hpp" open="0" top="0" tabpos="1">
+		<Cursor position="334" topLine="0" />
+	</File>
+	<File name="src/Sensor/IMU/ADXL345.hpp" open="1" top="0" tabpos="7">
+		<Cursor position="108" topLine="27" />
+	</File>
+	<File name="src/Sensor/IMU/BMP085.hpp" open="0" top="0" tabpos="3">
+		<Cursor position="0" topLine="0" />
+	</File>
+	<File name="src/Sensor/IMU/HMC5883L.hpp" open="0" top="0" tabpos="1">
+		<Cursor position="108" topLine="0" />
+	</File>
+	<File name="src/Sensor/IMU/L3G4200D.hpp" open="1" top="0" tabpos="6">
+		<Cursor position="131" topLine="6" />
+	</File>
+	<File name="src/Sensor/ISensor.h" open="1" top="0" tabpos="8">
+		<Cursor position="0" topLine="0" />
+	</File>
+	<File name="src/Sensor/Range/HCSR04.hpp" open="1" top="0" tabpos="1">
+		<Cursor position="257" topLine="9" />
+	</File>
+	<File name="src/main.cpp" open="1" top="0" tabpos="4">
+		<Cursor position="1233" topLine="10" />
+	</File>
+</CodeBlocks_layout_file>
