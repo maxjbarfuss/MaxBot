@@ -1,0 +1,191 @@
+#ifndef AHRS_HPP
+#define AHRS_HPP
+
+#include <chrono>
+#include <Dense>
+#include <Geometry>
+
+class AHRS
+{
+private:
+    Eigen::Quaterniond _q;
+    Eigen::Quaterniond _offset;
+    Eigen::Quaterniond _body;
+    double _beta;
+    unsigned long _last_millis;
+    std::chrono::time_point<std::chrono::high_resolution_clock> _epoch;
+
+    long Millis()
+    {
+        auto now = std::chrono::high_resolution_clock::now();
+        return std::chrono::duration_cast<std::chrono::milliseconds>(now - _epoch).count();
+    }
+
+    void  SetOffset(Eigen::Quaterniond o) {
+        _offset = o;
+    }
+
+    void SetBeta(double b) {
+        _beta = b;
+    }
+
+    void MadgwickUpdate(Eigen::Vector3d g, Eigen::Vector3d a, Eigen::Vector3d m, double dt) {
+
+        if (dt == 0 || std::isnan(m.norm()) || std::isinf(m.norm()))
+            return;
+
+        Eigen::Vector4d s, qDot;
+        double hx, hy;
+        double _2q0mx, _2q0my, _2q0mz, _2q1mx, _2bx, _2bz, _4bx, _4bz, _2q0, _2q1, _2q2, _2q3, _2q0q2, _2q2q3, q0q0, q0q1, q0q2, q0q3, q1q1, q1q2, q1q3, q2q2, q2q3, q3q3;
+
+        qDot(0) = 0.5d * (-_q.x() * g(0) - _q.y() * g(1) - _q.z() * g(2));
+        qDot(1) = 0.5d * (_q.w() * g(0) + _q.y() * g(2) - _q.z() * g(1));
+        qDot(2) = 0.5d * (_q.w() * g(1) - _q.x() * g(2) + _q.z() * g(0));
+        qDot(3) = 0.5d * (_q.w() * g(2) + _q.x() * g(1) - _q.y() * g(0));
+
+        if(!(std::isnan(a.norm())) && !(std::isinf(a.norm()))) {
+            a.normalize();
+            m.normalize();
+
+            // Auxiliary variables to avoid repeated arithmetic
+            _2q0mx = 2.0d * _q.w() * m(0);
+            _2q0my = 2.0d * _q.w() * m(1);
+            _2q0mz = 2.0d * _q.w() * m(2);
+            _2q1mx = 2.0d * _q.x() * m(0);
+            _2q0 = 2.0d * _q.w();
+            _2q1 = 2.0d * _q.x();
+            _2q2 = 2.0d * _q.y();
+            _2q3 = 2.0d * _q.z();
+            _2q0q2 = 2.0d * _q.w() * _q.y();
+            _2q2q3 = 2.0d * _q.y() * _q.z();
+            q0q0 = _q.w() * _q.w();
+            q0q1 = _q.w() * _q.x();
+            q0q2 = _q.w() * _q.y();
+            q0q3 = _q.w() * _q.z();
+            q1q1 = _q.x() * _q.x();
+            q1q2 = _q.x() * _q.y();
+            q1q3 = _q.x() * _q.z();
+            q2q2 = _q.y() * _q.y();
+            q2q3 = _q.y() * _q.z();
+            q3q3 = _q.z() * _q.z();
+
+            // Reference direction of Earth's magnetic field
+            hx = m(0) * q0q0 - _2q0my * _q.z() + _2q0mz * _q.y() + m(0) * q1q1
+                 + _2q1 * m(1) * _q.y() + _2q1 * m(2) * _q.z() - m(0) * q2q2
+                 - m(0) * q3q3;
+            hy = _2q0mx * _q.z() + m(1) * q0q0 - _2q0mz * _q.x() + _2q1mx
+                 * _q.y() - m(1) * q1q1 + m(1) * q2q2 + _2q2 * m(2) * _q.z()
+                 - m(1) * q3q3;
+            _2bx = sqrt(hx * hx + hy * hy);
+            _2bz = -_2q0mx * _q.y() + _2q0my * _q.x() + m(2) * q0q0 + _2q1mx
+                   * _q.z() - m(2) * q1q1 + _2q2 * m(1) * _q.z() - m(2) * q2q2
+                   + m(2) * q3q3;
+            _4bx = 2.0d * _2bx;
+            _4bz = 2.0d * _2bz;
+
+            double lt = (_2bx * (q0q2 + q1q3) + _2bz * (0.5d - q1q1 - q2q2) - m(2));
+
+            // Gradient decent algorithm corrective step
+            s(0) = -_2q2 * (2.0d * q1q3 - _2q0q2 - a.x()) + _2q1
+                 * (2.0d * q0q1 + _2q2q3 - a.y()) - _2bz * _q.y()
+                 * (_2bx * (0.5d - q2q2 - q3q3) + _2bz * (q1q3 - q0q2) - m(0))
+                 + (-_2bx * _q.z() + _2bz * _q.x())
+                 * (_2bx * (q1q2 - q0q3) + _2bz * (q0q1 + q2q3) - m(1))
+                 + _2bx * _q.y() * lt;
+            s(1) = _2q3 * (2.0d * q1q3 - _2q0q2 - a.x()) + _2q0
+                 * (2.0d * q0q1 + _2q2q3 - a.y()) - 4.0d * _q.x()
+                 * (1 - 2.0d * q1q1 - 2.0d * q2q2 - a.z()) + _2bz * _q.z()
+                 * (_2bx * (0.5d - q2q2 - q3q3) + _2bz * (q1q3 - q0q2) - m(0))
+                 + (_2bx * _q.y() + _2bz * _q.w())
+                 * (_2bx * (q1q2 - q0q3) + _2bz * (q0q1 + q2q3) - m(1))
+                 + (_2bx * _q.z() - _4bz * _q.x()) * lt;
+            s(2) = -_2q0 * (2.0d * q1q3 - _2q0q2 - a.x()) + _2q3
+                 * (2.0d * q0q1 + _2q2q3 - a.y()) - 4.0d * _q.y()
+                 * (1 - 2.0d * q1q1 - 2.0d * q2q2 - a.z())
+                 + (-_4bx * _q.y() - _2bz * _q.w())
+                 * (_2bx * (0.5f - q2q2 - q3q3) + _2bz * (q1q3 - q0q2) - m(0))
+                 + (_2bx * _q.x() + _2bz * _q.z())
+                 * (_2bx * (q1q2 - q0q3) + _2bz * (q0q1 + q2q3) - m(1))
+                 + (_2bx * _q.w() - _4bz * _q.y()) * lt;
+            s(3) = _2q1 * (2.0d * q1q3 - _2q0q2 - a.x()) + _2q2
+                 * (2.0d * q0q1 + _2q2q3 - a.y()) + (-_4bx * _q.z() + _2bz * _q.x())
+                 * (_2bx * (0.5d - q2q2 - q3q3) + _2bz * (q1q3 - q0q2) - m(0))
+                 + (-_2bx * _q.w() + _2bz * _q.y())
+                 * (_2bx * (q1q2 - q0q3) + _2bz * (q0q1 + q2q3) - m(1))
+                 + _2bx * _q.x() * lt;
+            s.normalize();
+
+            // Apply feedback step
+            qDot -= _beta * s;
+        }
+
+        // Integrate rate of change of Quaternion to yield Quaternion
+        qDot *= dt;
+        _q.w() += qDot(0);
+        _q.x() += qDot(1);
+        _q.y() += qDot(2);
+        _q.z() += qDot(3);
+
+        _q.normalize();
+    }
+
+public:
+
+    AHRS(double b = 0.1) {
+        _beta = b;
+        _last_millis = 0;
+        _epoch = std::chrono::high_resolution_clock::from_time_t(0);
+        _q = Eigen::Quaterniond(0,0,0,0);
+    }
+
+    void Calibrate(Eigen::Vector3d acc, Eigen::Vector3d mag)
+    {
+        Eigen::Vector3d down = Eigen::Vector3d(acc(0), acc(1), acc(2));
+        Eigen::Vector3d east = down.cross(mag);
+        Eigen::Vector3d north = east.cross(down);
+        down.normalize();
+        east.normalize();
+        north.normalize();
+        Eigen::Matrix3d m;
+        m << north(0), north(1), north(2),
+             east(0), east(1), east(2),
+             down(0), down(1), down(2);
+        _q = m;
+        _q.normalize();
+        _last_millis = Millis();
+    }
+
+    void Iterate(Eigen::Vector3d ang_vel, Eigen::Vector3d acc, Eigen::Vector3d mag) {
+        auto m = Millis();
+        double dt =  (m - _last_millis) / 1000.0;
+        _last_millis = m;
+        MadgwickUpdate(ang_vel, acc, mag, dt);
+        _body = _q;
+    }
+
+    Eigen::Vector3d GetEuler()
+    {
+        Eigen::Vector3d ret;
+        double sqw = _body.w()*_body.w();
+        double sqx = _body.x()*_body.x();
+        double sqy = _body.y()*_body.y();
+        double sqz = _body.z()*_body.z();
+        ret(0) = atan2(2.0*(_body.x()*_body.y()+_body.z()*_body.w()),(sqx-sqy-sqz+sqw));
+        ret(1) = asin(-2.0*(_body.x()*_body.z()-_body.y()*_body.w())/(sqx+sqy+sqz+sqw));
+        ret(2) = atan2(2.0*(_body.y()*_body.z()+_body.x()*_body.w()),(-sqx-sqy+sqz+sqw));
+        return ret;
+    }
+
+    Eigen::Quaterniond get_quaternion()
+    {
+        return _body;
+    }
+
+    Eigen::Quaterniond get_imu_quaternion()
+    {
+        return _q;
+    }
+
+};
+
+#endif //AHR_HPP
