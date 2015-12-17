@@ -57,8 +57,8 @@ protected:
     }
 
 public:
-    L3G4200D(IO::I2CFactory& I2CFactory) {
-        _i2c = move(I2CFactory.GetI2C(L3G4200D_ADDRESS));
+    L3G4200D(IO::I2CFactory& i2CFactory) {
+        _i2c = move(i2CFactory.GetI2C(L3G4200D_ADDRESS));
         _scale = 0;
         Start();
     };

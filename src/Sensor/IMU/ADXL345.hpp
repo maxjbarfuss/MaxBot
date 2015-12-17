@@ -87,8 +87,8 @@ protected:
     }
 
 public:
-    ADXL345(IO::I2CFactory& I2CFactory) {
-        _i2c = move(I2CFactory.GetI2C(ADXL345_ADDRESS));
+    ADXL345(IO::I2CFactory& i2CFactory) {
+        _i2c = move(i2CFactory.GetI2C(ADXL345_ADDRESS));
         Start();
     }
 

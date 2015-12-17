@@ -47,6 +47,10 @@
 		</Linker>
 		<Unit filename="src/AHRS/AHRS.hpp" />
 		<Unit filename="src/AHRS/Filter.hpp" />
+		<Unit filename="src/Computation/FilterFactory" />
+		<Unit filename="src/Computation/FilterFactory.hpp" />
+		<Unit filename="src/Computation/IFilter.h" />
+		<Unit filename="src/Computation/SimpleFilter.hpp" />
 		<Unit filename="src/IO/I2CFactory.hpp" />
 		<Unit filename="src/IO/II2C.h" />
 		<Unit filename="src/IO/WiringPi/WiringPiI2C.hpp" />

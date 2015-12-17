@@ -91,8 +91,8 @@ protected:
     }
 
 public:
-    HMC5883L(IO::I2CFactory& I2CFactory) {
-        _i2c = move(I2CFactory.GetI2C(HMC5883L_ADDRESS));
+    HMC5883L(IO::I2CFactory& i2CFactory) {
+        _i2c = move(i2CFactory.GetI2C(HMC5883L_ADDRESS));
         //calibrated Nov 27th 2015
         _hardIronOffset << -51.52,24.84,221.72;
         _softIronScale <<  1,0.980296,1.031088;

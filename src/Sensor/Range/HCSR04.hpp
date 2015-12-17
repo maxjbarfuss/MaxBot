@@ -7,6 +7,8 @@
 #include <wiringPi.h>
 #include <wiringPiSPI.h>
 
+#include <Computation/FilterFactory.hpp>
+#include <Computation/IFilter.h>
 #include <Sensor/ISensor.h>
 
 namespace Sensor {
@@ -17,7 +19,6 @@ namespace Sensor {
 #define HCSR04_MAX_RANGE                        4.0    //meters
 #define HCSR04_MIN_RANGE                        .02    //meters
 #define HCSR04_FILTER_SIZE                      12
-
 
 ///****************************************************************************
 /// HC-SR04 - Ultrasonic 2-400cm range sensor
@@ -36,7 +37,7 @@ private:
     short                                           _echoPin;
     std::chrono::high_resolution_clock::time_point  _begin;
     std::chrono::high_resolution_clock::time_point  _end;
-    std::array<double, HCSR04_FILTER_SIZE>          _filter;
+    std::unique_ptr<Computation::IFilter>           _filter;
 
     void RunTimer() {
         _echoPinMutex.try_lock_for(std::chrono::milliseconds(HCSRO4_MIN_READ_DELAY));
@@ -48,45 +49,13 @@ private:
         }
     }
 
-    double AverageFilter() {
-        double total = 0.0;
-        int count = 0;
-        for (int i = HCSR04_FILTER_SIZE - 1; i >= 0; i--) {
-            if (_filter[i] <= HCSR04_MAX_RANGE && _filter[i] >= HCSR04_MIN_RANGE) {
-                    total += _filter[i];
-                    count += i;
-            }
-        }
-        return total / count;
-    }
-
-    double Filter(double raw) {
-        double total = 0.0;
-        int count = 0;
-        double avg = AverageFilter();
-        for (int i = HCSR04_FILTER_SIZE; i >= 0; i--) {
-            double v = (i < HCSR04_FILTER_SIZE) ? _filter[i] : raw;
-            if (v <= HCSR04_MAX_RANGE && v >= HCSR04_MIN_RANGE
-                && v > avg - (HCSR04_MAX_RANGE - HCSR04_MIN_RANGE) / 4
-                && v < avg + (HCSR04_MAX_RANGE - HCSR04_MIN_RANGE) / 4) {
-                    total += v * i*i;
-                    count += i*i;
-            }
-            if (i < HCSR04_FILTER_SIZE - 1)
-                _filter[i] = _filter[i+1];
-        }
-        _filter[HCSR04_FILTER_SIZE - 1] = raw;
-        return total / count;
-    }
-
 public:
-    HCSR04(short triggerPin, short echoPin) : _triggerPin(triggerPin), _echoPin(echoPin) {
+    HCSR04(short triggerPin, short echoPin, Computation::FilterFactory &filterFactory) : _triggerPin(triggerPin), _echoPin(echoPin) {
         wiringPiSetup();
         pinMode(_triggerPin, OUTPUT);
         pinMode(_echoPin, INPUT);
         wiringPiISR(_echoPin, INT_EDGE_BOTH, &HCSR04::WaitForInterrupt);
-        for (int i = 0; i<HCSR04_FILTER_SIZE; i++)
-            _filter[i] = HCSR04_MAX_RANGE + 1;
+        _filter = std::move(filterFactory.GetFilter(HCSR04_MIN_RANGE, HCSR04_MAX_RANGE, (HCSR04_MAX_RANGE - HCSR04_MIN_RANGE) / 4, HCSR04_FILTER_SIZE));
     }
 
     virtual void Calibrate() {}
@@ -102,7 +71,7 @@ public:
         digitalWrite(_triggerPin, LOW);
         RunTimer();
         RunTimer();
-        auto m = Filter(std::chrono::duration_cast<std::chrono::microseconds>(_end - _begin).count() / HCSR04_MICROSECONDS_PER_METER);
+        auto m = _filter->GetFilteredValue(std::chrono::duration_cast<std::chrono::microseconds>(_end - _begin).count() / HCSR04_MICROSECONDS_PER_METER);
         _echoPinMutex.unlock();
         return m;
     }

@@ -22,7 +22,7 @@
 	<File name="src/Publishers/VectorSensorPublisher.hpp" open="0" top="0" tabpos="1">
 		<Cursor position="334" topLine="0" />
 	</File>
-	<File name="src/Sensor/IMU/ADXL345.hpp" open="1" top="0" tabpos="7">
+	<File name="src/Sensor/IMU/ADXL345.hpp" open="1" top="0" tabpos="4">
 		<Cursor position="108" topLine="27" />
 	</File>
 	<File name="src/Sensor/IMU/BMP085.hpp" open="0" top="0" tabpos="3">
@@ -31,16 +31,19 @@
 	<File name="src/Sensor/IMU/HMC5883L.hpp" open="0" top="0" tabpos="1">
 		<Cursor position="108" topLine="0" />
 	</File>
-	<File name="src/Sensor/IMU/L3G4200D.hpp" open="1" top="0" tabpos="6">
+	<File name="src/Sensor/IMU/L3G4200D.hpp" open="1" top="0" tabpos="3">
 		<Cursor position="131" topLine="6" />
 	</File>
-	<File name="src/Sensor/ISensor.h" open="1" top="0" tabpos="8">
+	<File name="src/Sensor/ISensor.h" open="1" top="0" tabpos="5">
 		<Cursor position="0" topLine="0" />
 	</File>
-	<File name="src/Sensor/Range/HCSR04.hpp" open="1" top="0" tabpos="1">
-		<Cursor position="257" topLine="9" />
+	<File name="src/Sensor/Range/GP2Y0A21YK.hpp" open="1" top="1" tabpos="6">
+		<Cursor position="1148" topLine="0" />
 	</File>
-	<File name="src/main.cpp" open="1" top="0" tabpos="4">
-		<Cursor position="1233" topLine="10" />
+	<File name="src/Sensor/Range/HCSR04.hpp" open="1" top="0" tabpos="1">
+		<Cursor position="3385" topLine="60" />
+	</File>
+	<File name="src/main.cpp" open="1" top="0" tabpos="2">
+		<Cursor position="2333" topLine="15" />
 	</File>
 </CodeBlocks_layout_file>
