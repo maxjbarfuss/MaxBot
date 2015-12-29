@@ -4,7 +4,9 @@ namespace Computation {
 
 class IFilter {
 public:
-    virtual double GetFilteredValue(double raw) = 0;
+    virtual void AddValue(double raw) = 0;
+    virtual void Clear() = 0;
+    virtual double GetFilteredValue() = 0;
 };
 
 };

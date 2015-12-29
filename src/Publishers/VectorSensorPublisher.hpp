@@ -1,7 +1,7 @@
 #pragma once
 
 #include <IMessageBroker.h>
-#include <Vector3.pb.h>
+#include <Vector.pb.h>
 #include <Dense>
 
 #include <Sensor/ISensor.h>

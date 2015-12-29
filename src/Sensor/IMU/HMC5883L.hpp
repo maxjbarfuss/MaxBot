@@ -60,7 +60,6 @@ private:
     Eigen::Vector3d _hardIronOffset;
     Eigen::Vector3d _softIronScale;
 
-protected:
     void Start()
     {
         SetScale(HMC5883L_SCALE_1_3);

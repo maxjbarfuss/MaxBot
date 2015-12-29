@@ -67,7 +67,6 @@ private:
     std::unique_ptr<IO::II2C> _i2c;
     Eigen::Vector3d _calibration;
 
-protected:
     void Start() {
         set_bandwidth(ADXL345_DATARATE_50_HZ);
         set_range(ADXL345_RANGE_16_G);

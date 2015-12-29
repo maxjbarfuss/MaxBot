@@ -40,7 +40,6 @@ private:
     Eigen::Vector3d _calibration;
     double _scale;
 
-protected:
     void Start() {
         SetScale(L3G4200D_REG_SCALE2000);
         _i2c->Write8(L3G4200D_REG_CTRL1, 0x0F); //power on, enable x,y,z

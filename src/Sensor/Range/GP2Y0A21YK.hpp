@@ -1,11 +1,7 @@
 #pragma once
 
-#include <iostream>
 #include <cmath>
-#include <wiringPi.h>
-#include <wiringPiSPI.h>
-#include <mcp3004.h>
-
+#include <IO/ISPI.h>
 #include <Computation/FilterFactory.hpp>
 #include <Computation/IFilter.h>
 #include <Sensor/ISensor.h>
@@ -13,32 +9,40 @@
 namespace Sensor {
 
 #define GP2Y0A21YK_BASE                             64
-#define GP2Y0A21YK_MAX_RANGE                        1       //meters (datasheet says 80cm, but practice says 1m is fairly accurate)
+#define GP2Y0A21YK_MAX_RANGE                        .8      //meters
 #define GP2Y0A21YK_MIN_RANGE                        .065    //meters (datasheet says 10cm, but practice says 6.5cm is fairly accurate)
-#define GP2Y0A21YK_FILTER_SIZE                      4
-
+#define GP2Y0A21YK_MAX_DEVIATION                    .02     //meters
+#define GP2Y0A21YK_FILTER_SIZE                      10
+#define GP2Y0A21YK_READ_DELAY                       10      //microseconds
+//-----------------------------------------------------------------------------
+// Power regression 12/20/15 r-squared: .9993 in room lighting
+// conditions using flat white object
+#define GP2Y0A21YK_FIT_ALPHA                        143.39
+#define GP2Y0A21YK_FIT_BETA                         -1.181
 
 ///****************************************************************************
 /// GP2Y0A21YK - Infrared 20-80cm range sensor
 ///****************************************************************************
 class GP2Y0A21YK : public ISensor<double> {
 private:
-    short                                   _spiChannel;
-    short                                   _spiPin;
+    std::shared_ptr<IO::ISPI>               _spi;
+    uint8_t                                 _pin;
     std::unique_ptr<Computation::IFilter>   _filter;
 
 public:
-    GP2Y0A21YK(short spiChannel, short spiPin, Computation::FilterFactory &filterFactory) : _spiChannel(spiChannel), _spiPin(spiPin) {
-        mcp3004Setup (GP2Y0A21YK_BASE, _spiChannel);
-        _filter = std::move(filterFactory.GetFilter(GP2Y0A21YK_MIN_RANGE, GP2Y0A21YK_MAX_RANGE, (GP2Y0A21YK_MAX_RANGE - GP2Y0A21YK_MIN_RANGE), GP2Y0A21YK_FILTER_SIZE));
+    GP2Y0A21YK(std::shared_ptr<IO::ISPI> spi, uint8_t pin, Computation::FilterFactory &filterFactory) : _spi(spi), _pin(pin) {
+        _filter = std::move(filterFactory.GetFilter(GP2Y0A21YK_MIN_RANGE, GP2Y0A21YK_MAX_RANGE, GP2Y0A21YK_MAX_DEVIATION, GP2Y0A21YK_FILTER_SIZE));
     }
 
     virtual void Calibrate() {}
 
-
     virtual double GetReading() {
-        /// magic formula found here: http://home.roboticlab.eu/en/examples/sensor/ir_distance
-        return _filter->GetFilteredValue(((5461.0 / (analogRead (GP2Y0A21YK_BASE + _spiPin) - 17) - 2)) / 100.0);
+        _filter->Clear();
+        for (int i=0; i<GP2Y0A21YK_FILTER_SIZE; i++) {
+            _filter->AddValue(GP2Y0A21YK_FIT_ALPHA * pow(_spi->Read(_pin), GP2Y0A21YK_FIT_BETA));
+            delayMicroseconds(GP2Y0A21YK_READ_DELAY);
+        }
+        return _filter->GetFilteredValue();
     }
 };
 
