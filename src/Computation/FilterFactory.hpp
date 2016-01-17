@@ -1,7 +1,9 @@
 #pragma once
 
+#include <memory>
+
 #include <Computation/IFilter.h>
-#include <Computation/SimpleAverageFilter.hpp>
+#include <Computation/SimpleAverageFilter.h>
 
 namespace Computation {
 

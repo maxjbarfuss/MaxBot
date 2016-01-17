@@ -9,8 +9,8 @@ namespace Publishers {
 
 class IPublisher {
 public:
-    virtual ~IPublsher() {}
     virtual void Publish() = 0;
+    virtual ~IPublisher() {}
 };
 
 };
