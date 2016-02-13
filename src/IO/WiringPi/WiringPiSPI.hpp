@@ -1,6 +1,5 @@
 #pragma once
 
-#include <iostream>
 #include <wiringPi.h>
 #include <wiringPiSPI.h>
 #include <mcp3004.h>

@@ -1,5 +1,5 @@
 #include <MotionControl/VelocityControl.h>
-#include <iostream>
+#include <iomanip>
 
 namespace MotionControl {
 
@@ -47,7 +47,6 @@ void VelocityControl::WaitForFuture(std::future<std::tuple<int, int>>& future, b
 }
 
 void VelocityControl::SetVelocity(double linear, double angular) {
-    std::cout << linear << std::endl;
     double angularSpeed = (angular * _wheelBase) / 2;
     _leftSpeed = std::round((linear - angularSpeed) * _qpr / _wheelCircumference);
     _rightSpeed = std::round((linear + angularSpeed) * _qpr / _wheelCircumference);

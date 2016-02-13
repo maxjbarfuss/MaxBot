@@ -4,7 +4,6 @@
 #include <cmath>
 #include <deque>
 #include <algorithm>
-#include <iostream>
 
 #include <Sensor/IMU/L3G4200D.h>
 
@@ -14,7 +13,7 @@ L3G4200D::L3G4200D(IO::I2CFactory& i2CFactory, uint8_t scale) {
     _i2c = move(i2CFactory.GetI2C(L3G4200D_ADDRESS));
     SetScale(scale);
     _i2c->Write8(L3G4200D_REG_CTRL1, 0x0F); //power on, enable x,y,z
-};
+}
 
 void L3G4200D::SetScale(uint8_t scale) {
     if (scale == L3G4200D_REG_SCALE250)
@@ -44,6 +43,6 @@ Eigen::Vector3d L3G4200D::GetReading() {
                                    _i2c->Read16Signed(L3G4200D_REG_DATAY),
                                    _i2c->Read16Signed(L3G4200D_REG_DATAZ));
     return ((reading) * _scale) - _calibration;
-};
+}
 
 };

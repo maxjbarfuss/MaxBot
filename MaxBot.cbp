@@ -70,6 +70,8 @@
 		<Unit filename="src/Publishers/RangeSensorPublisher.h" />
 		<Unit filename="src/Publishers/VectorSensorPublisher.cpp" />
 		<Unit filename="src/Publishers/VectorSensorPublisher.h" />
+		<Unit filename="src/Publishers/VoltagePublisher.cpp" />
+		<Unit filename="src/Publishers/VoltagePublisher.h" />
 		<Unit filename="src/Sensor/IMU/ADXL345.cpp" />
 		<Unit filename="src/Sensor/IMU/ADXL345.h" />
 		<Unit filename="src/Sensor/IMU/BMP085.cpp" />
@@ -79,6 +81,8 @@
 		<Unit filename="src/Sensor/IMU/L3G4200D.cpp" />
 		<Unit filename="src/Sensor/IMU/L3G4200D.h" />
 		<Unit filename="src/Sensor/ISensor.h" />
+		<Unit filename="src/Sensor/MotorController/RoboClawVoltage.cpp" />
+		<Unit filename="src/Sensor/MotorController/RoboClawVoltage.h" />
 		<Unit filename="src/Sensor/Range/GP2Y0A02YK.cpp" />
 		<Unit filename="src/Sensor/Range/GP2Y0A02YK.h" />
 		<Unit filename="src/Sensor/Range/GP2Y0A21YK.cpp" />

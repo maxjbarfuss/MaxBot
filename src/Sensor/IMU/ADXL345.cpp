@@ -36,6 +36,7 @@ void ADXL345::StepCalibration(int step) {
 void ADXL345::EndCalibration() {
     _scale = 1 / _average.norm();
 }
+
 Eigen::Vector3d ADXL345::GetReading() {
     auto x = _i2c->Read10(ADXL345_REG_DATAX);
     auto y = _i2c->Read10(ADXL345_REG_DATAY);

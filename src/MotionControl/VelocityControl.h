@@ -5,15 +5,13 @@
 #include <thread>
 #include <future>
 #include <chrono>
-#include <iostream>
 
-#include <MotionControl/IRoboClaw.h>
 #include <MotionControl/IRoboClaw.h>
 
 namespace MotionControl {
 
 #define STEP_TIME               .06             //seconds
-#define ACCELERATION            1000            //quadrature pulses per second per second
+#define ACCELERATION            2500            //quadrature pulses per second per second
 
 class VelocityControl {
 private:

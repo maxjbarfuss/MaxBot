@@ -9,7 +9,7 @@ HMC5883L::HMC5883L(IO::I2CFactory& i2CFactory, uint8_t scale, uint8_t mode) {
     _softIronScale <<  1,0.980296,1.031088;
     SetScale(scale);
     _i2c->Write8(HMC5883L_REG_MODE, mode);
-};
+}
 
 void HMC5883L::SetScale(uint8_t scale)
 {
@@ -52,6 +52,6 @@ Eigen::Vector3d HMC5883L::GetReading() {
     v(1) *= _softIronScale(1);
     v(2) *= _softIronScale(2);
     return v - _calibration;
-};
+}
 
 };
