@@ -3,9 +3,9 @@
 namespace Publishers {
 
 VectorSensorPublisher::VectorSensorPublisher(std::shared_ptr<MaxBotMessages::IMessageBroker> messageNode, const std::string topic,
-const std::string hardwareId, std::shared_ptr<Sensor::ISensor<Eigen::Vector3d>> sensor)
-: _messageNode(messageNode), _topic(topic), _sensor(sensor) {
-    _v.mutable_stamp()->set_hardware_id(hardwareId);
+const std::string componentId, std::unique_ptr<Sensor::ISensor<Eigen::Vector3d>> sensor)
+: _messageNode(messageNode), _topic(topic), _sensor(std::move(sensor)) {
+    _v.mutable_stamp()->set_component_id(componentId);
 }
 
 void VectorSensorPublisher::Publish() {

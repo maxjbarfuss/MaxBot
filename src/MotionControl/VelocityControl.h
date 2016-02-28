@@ -30,6 +30,8 @@ private:
     int                                                             _lastRearRight;
     int                                                             _lastFrontLeft;
     int                                                             _lastFrontRight;
+    double                                                          _angularVelocity;
+    double                                                          _linearVelocity;
 private:
     static int DesiredDistance(int currentSpeed, int desiredSpeed);
     std::tuple<int, int> RunMotors(std::shared_ptr<IRoboClaw> motor, int address, double leftSpeed, double rightSpeed, std::chrono::time_point<std::chrono::steady_clock>& lastTime);
@@ -42,9 +44,10 @@ public:
     void SetVelocity(double linear, double angular);
     /// ************************************************
     /// RunMotors sets x, y and heading delta since last
-    /// call to RunMotors
+    /// call to RunMotors, plus current commanded
+    /// linear and angular velocities
     /// ************************************************
-    void RunMotors(double& x, double& y, double& heading);
+    void RunMotors(double& x, double& y, double& heading, double& angularVelocity, double linearVelocity);
 };
 
 };

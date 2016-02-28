@@ -1,8 +1,11 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
 <CodeBlocks_layout_file>
 	<ActiveTarget name="Debug" />
-	<File name="src/AHRS/AHRS.hpp" open="0" top="0" tabpos="2">
-		<Cursor position="0" topLine="0" />
+	<File name="src/Localization/AHRS.cpp" open="1" top="1" tabpos="5">
+		<Cursor position="1921" topLine="7" />
+	</File>
+	<File name="src/Localization/AHRS.h" open="0" top="0" tabpos="7">
+		<Cursor position="1222" topLine="0" />
 	</File>
 	<File name="src/MotionControl/IRoboClaw.h" open="0" top="0" tabpos="12">
 		<Cursor position="7901" topLine="95" />
@@ -19,26 +22,83 @@
 	<File name="src/MotionControl/RoboClawV5.h" open="0" top="0" tabpos="14">
 		<Cursor position="8602" topLine="43" />
 	</File>
-	<File name="src/MotionControl/VelocityControl.cpp" open="0" top="0" tabpos="1">
-		<Cursor position="2935" topLine="19" />
+	<File name="src/MotionControl/VelocityControl.cpp" open="1" top="0" tabpos="6">
+		<Cursor position="1333" topLine="0" />
 	</File>
 	<File name="src/MotionControl/VelocityControl.h" open="0" top="0" tabpos="3">
-		<Cursor position="2345" topLine="0" />
+		<Cursor position="2146" topLine="0" />
+	</File>
+	<File name="src/Packages/GPIOPackage.cpp" open="0" top="0" tabpos="18">
+		<Cursor position="378" topLine="0" />
+	</File>
+	<File name="src/Packages/GPIOPackage.h" open="0" top="0" tabpos="20">
+		<Cursor position="175" topLine="0" />
+	</File>
+	<File name="src/Packages/I2CPackage.cpp" open="0" top="0" tabpos="9">
+		<Cursor position="2101" topLine="0" />
+	</File>
+	<File name="src/Packages/I2CPackage.h" open="0" top="0" tabpos="14">
+		<Cursor position="220" topLine="0" />
+	</File>
+	<File name="src/Packages/IMaxBotPackage.h" open="0" top="0" tabpos="0">
+		<Cursor position="56" topLine="0" />
+	</File>
+	<File name="src/Packages/LocalizationPackage.cpp" open="0" top="0" tabpos="4">
+		<Cursor position="603" topLine="0" />
+	</File>
+	<File name="src/Packages/LocalizationPackage.h" open="0" top="0" tabpos="5">
+		<Cursor position="44" topLine="0" />
+	</File>
+	<File name="src/Packages/MaxBotPackageBase.cpp" open="1" top="0" tabpos="1">
+		<Cursor position="1128" topLine="0" />
+	</File>
+	<File name="src/Packages/MaxBotPackageBase.h" open="0" top="0" tabpos="6">
+		<Cursor position="286" topLine="0" />
+	</File>
+	<File name="src/Packages/MotionPackage.cpp" open="1" top="0" tabpos="4">
+		<Cursor position="445" topLine="0" />
+	</File>
+	<File name="src/Packages/MotionPackage.h" open="0" top="0" tabpos="17">
+		<Cursor position="311" topLine="0" />
+	</File>
+	<File name="src/Packages/SPIPackage.cpp" open="0" top="0" tabpos="21">
+		<Cursor position="1723" topLine="0" />
+	</File>
+	<File name="src/Packages/SPIPackage.h" open="0" top="0" tabpos="0">
+		<Cursor position="173" topLine="0" />
+	</File>
+	<File name="src/Publishers/IPublisher.h" open="0" top="0" tabpos="5">
+		<Cursor position="172" topLine="0" />
 	</File>
 	<File name="src/Publishers/MotionPublisher.cpp" open="0" top="0" tabpos="5">
-		<Cursor position="0" topLine="0" />
+		<Cursor position="569" topLine="0" />
 	</File>
 	<File name="src/Publishers/MotionPublisher.h" open="0" top="0" tabpos="6">
-		<Cursor position="0" topLine="0" />
+		<Cursor position="1071" topLine="0" />
 	</File>
 	<File name="src/Publishers/RangeSensorPublisher.cpp" open="0" top="0" tabpos="0">
-		<Cursor position="480" topLine="0" />
+		<Cursor position="406" topLine="0" />
 	</File>
-	<File name="src/Sensor/IMU/ADXL345.cpp" open="0" top="0" tabpos="3">
+	<File name="src/Publishers/RangeSensorPublisher.h" open="0" top="0" tabpos="0">
+		<Cursor position="665" topLine="0" />
+	</File>
+	<File name="src/Publishers/VectorSensorPublisher.cpp" open="0" top="0" tabpos="9">
+		<Cursor position="0" topLine="0" />
+	</File>
+	<File name="src/Publishers/VectorSensorPublisher.h" open="0" top="0" tabpos="10">
+		<Cursor position="681" topLine="0" />
+	</File>
+	<File name="src/Publishers/VoltagePublisher.cpp" open="0" top="0" tabpos="0">
+		<Cursor position="417" topLine="0" />
+	</File>
+	<File name="src/Publishers/VoltagePublisher.h" open="0" top="0" tabpos="0">
+		<Cursor position="652" topLine="0" />
+	</File>
+	<File name="src/Sensor/IMU/ADXL345.cpp" open="0" top="0" tabpos="12">
 		<Cursor position="684" topLine="0" />
 	</File>
-	<File name="src/Sensor/IMU/ADXL345.h" open="0" top="0" tabpos="4">
-		<Cursor position="2857" topLine="3" />
+	<File name="src/Sensor/IMU/ADXL345.h" open="0" top="0" tabpos="13">
+		<Cursor position="1592" topLine="3" />
 	</File>
 	<File name="src/Sensor/IMU/BMP085.cpp" open="0" top="0" tabpos="14">
 		<Cursor position="0" topLine="0" />
@@ -46,19 +106,19 @@
 	<File name="src/Sensor/IMU/BMP085.h" open="0" top="0" tabpos="11">
 		<Cursor position="0" topLine="0" />
 	</File>
-	<File name="src/Sensor/IMU/HMC5883L.cpp" open="0" top="0" tabpos="12">
-		<Cursor position="1787" topLine="0" />
+	<File name="src/Sensor/IMU/HMC5883L.cpp" open="0" top="0" tabpos="10">
+		<Cursor position="389" topLine="0" />
 	</File>
-	<File name="src/Sensor/IMU/HMC5883L.h" open="0" top="0" tabpos="7">
-		<Cursor position="2946" topLine="0" />
+	<File name="src/Sensor/IMU/HMC5883L.h" open="0" top="0" tabpos="11">
+		<Cursor position="910" topLine="0" />
 	</File>
-	<File name="src/Sensor/IMU/L3G4200D.cpp" open="0" top="0" tabpos="5">
-		<Cursor position="244" topLine="0" />
+	<File name="src/Sensor/IMU/L3G4200D.cpp" open="0" top="0" tabpos="16">
+		<Cursor position="378" topLine="0" />
 	</File>
-	<File name="src/Sensor/IMU/L3G4200D.h" open="0" top="0" tabpos="6">
-		<Cursor position="1826" topLine="0" />
+	<File name="src/Sensor/IMU/L3G4200D.h" open="0" top="0" tabpos="15">
+		<Cursor position="30" topLine="0" />
 	</File>
-	<File name="src/Sensor/ISensor.h" open="0" top="0" tabpos="0">
+	<File name="src/Sensor/ISensor.h" open="0" top="0" tabpos="9">
 		<Cursor position="233" topLine="0" />
 	</File>
 	<File name="src/Sensor/Range/GP2Y0A02YK.cpp" open="0" top="0" tabpos="13">
@@ -80,18 +140,18 @@
 		<Cursor position="1678" topLine="0" />
 	</File>
 	<File name="src/Sensor/Range/HCSR04.cpp" open="0" top="0" tabpos="0">
-		<Cursor position="1417" topLine="0" />
+		<Cursor position="32" topLine="0" />
 	</File>
 	<File name="src/Sensor/Range/HCSR04.h" open="0" top="0" tabpos="0">
-		<Cursor position="1457" topLine="0" />
+		<Cursor position="1347" topLine="0" />
 	</File>
-	<File name="src/Subscribers/TeleopSubscriber.cpp" open="0" top="0" tabpos="4">
-		<Cursor position="600" topLine="0" />
+	<File name="src/Subscribers/TeleopSubscriber.cpp" open="0" top="0" tabpos="8">
+		<Cursor position="155" topLine="0" />
 	</File>
 	<File name="src/Subscribers/TeleopSubscriber.h" open="0" top="0" tabpos="5">
-		<Cursor position="0" topLine="0" />
+		<Cursor position="275" topLine="0" />
 	</File>
-	<File name="src/main.cpp" open="0" top="0" tabpos="3">
-		<Cursor position="1394" topLine="27" />
+	<File name="src/main.cpp" open="1" top="0" tabpos="2">
+		<Cursor position="574" topLine="0" />
 	</File>
 </CodeBlocks_layout_file>

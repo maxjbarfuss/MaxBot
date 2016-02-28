@@ -45,8 +45,6 @@
 		<Linker>
 			<Add option="-lprotobuf -lzmq -lpthread" />
 		</Linker>
-		<Unit filename="src/AHRS/AHRS.hpp" />
-		<Unit filename="src/AHRS/Filter.hpp" />
 		<Unit filename="src/Computation/FilterFactory.hpp" />
 		<Unit filename="src/Computation/IFilter.h" />
 		<Unit filename="src/Computation/SimpleAverageFilter.cpp" />
@@ -56,6 +54,8 @@
 		<Unit filename="src/IO/ISPI.h" />
 		<Unit filename="src/IO/WiringPi/WiringPiI2C.hpp" />
 		<Unit filename="src/IO/WiringPi/WiringPiSPI.hpp" />
+		<Unit filename="src/Localization/AHRS.cpp" />
+		<Unit filename="src/Localization/AHRS.h" />
 		<Unit filename="src/MotionControl/IRoboClaw.h" />
 		<Unit filename="src/MotionControl/RoboClawV4.cpp" />
 		<Unit filename="src/MotionControl/RoboClawV4.h" />
@@ -63,6 +63,19 @@
 		<Unit filename="src/MotionControl/RoboClawV5.h" />
 		<Unit filename="src/MotionControl/VelocityControl.cpp" />
 		<Unit filename="src/MotionControl/VelocityControl.h" />
+		<Unit filename="src/Packages/GPIOPackage.cpp" />
+		<Unit filename="src/Packages/GPIOPackage.h" />
+		<Unit filename="src/Packages/I2CPackage.cpp" />
+		<Unit filename="src/Packages/I2CPackage.h" />
+		<Unit filename="src/Packages/IMaxBotPackage.h" />
+		<Unit filename="src/Packages/LocalizationPackage.cpp" />
+		<Unit filename="src/Packages/LocalizationPackage.h" />
+		<Unit filename="src/Packages/MaxBotPackageBase.cpp" />
+		<Unit filename="src/Packages/MaxBotPackageBase.h" />
+		<Unit filename="src/Packages/MotionPackage.cpp" />
+		<Unit filename="src/Packages/MotionPackage.h" />
+		<Unit filename="src/Packages/SPIPackage.cpp" />
+		<Unit filename="src/Packages/SPIPackage.h" />
 		<Unit filename="src/Publishers/IPublisher.h" />
 		<Unit filename="src/Publishers/MotionPublisher.cpp" />
 		<Unit filename="src/Publishers/MotionPublisher.h" />

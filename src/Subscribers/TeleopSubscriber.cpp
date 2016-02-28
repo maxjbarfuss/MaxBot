@@ -4,7 +4,7 @@
 
 namespace Subscribers {
 
-TeleopSubscriber::TeleopSubscriber(std::shared_ptr<MaxBotMessages::MessageBroker> messageNode, const std::string topic,
+TeleopSubscriber::TeleopSubscriber(std::shared_ptr<MaxBotMessages::IMessageBroker> messageNode, const std::string topic,
 std::shared_ptr<MotionControl::VelocityControl> velocityControl)
 : _messageNode(messageNode), _topic(topic), _velocityControl(velocityControl), _active(false)  {
     _messageNode->Subscribe(_topic, [&](std::string s){ UpdateVelocity(s); });

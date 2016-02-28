@@ -12,7 +12,7 @@ namespace Sensor {
 L3G4200D::L3G4200D(IO::I2CFactory& i2CFactory, uint8_t scale) {
     _i2c = move(i2CFactory.GetI2C(L3G4200D_ADDRESS));
     SetScale(scale);
-    _i2c->Write8(L3G4200D_REG_CTRL1, 0x0F); //power on, enable x,y,z
+    _i2c->Write8(L3G4200D_REG_CTRL1, 0x0F); //power on, enable x,y,z, 100Hz
 }
 
 void L3G4200D::SetScale(uint8_t scale) {

@@ -3,9 +3,9 @@
 namespace Publishers {
 
     VoltagePublisher::VoltagePublisher(std::shared_ptr<MaxBotMessages::IMessageBroker> messageNode, const std::string topic,
-                          const std::string hardwareId, std::shared_ptr<Sensor::ISensor<double>> sensor)
+                          const std::string componentId, std::shared_ptr<Sensor::ISensor<double>> sensor)
     : _messageNode(messageNode), _topic(topic), _sensor(sensor) {
-        _v.mutable_stamp()->set_hardware_id(hardwareId);
+        _v.mutable_stamp()->set_component_id(componentId);
     }
 
     void VoltagePublisher::Publish() {

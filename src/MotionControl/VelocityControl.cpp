@@ -50,9 +50,11 @@ void VelocityControl::SetVelocity(double linear, double angular) {
     double angularSpeed = (angular * _wheelBase) / 2;
     _leftSpeed = std::round((linear - angularSpeed) * _qpr / _wheelCircumference);
     _rightSpeed = std::round((linear + angularSpeed) * _qpr / _wheelCircumference);
+    _angularVelocity = angular;
+    _linearVelocity = linear;
 }
 
-void VelocityControl::RunMotors(double& x, double& y, double& heading) {
+void VelocityControl::RunMotors(double& x, double& y, double& heading, double& angularVelocity, double linearVelocity) {
     int frontLeft, frontRight, rearLeft, rearRight;
     bool frontSuccess = false;
     bool rearSuccess = false;
@@ -90,10 +92,11 @@ void VelocityControl::RunMotors(double& x, double& y, double& heading) {
     _lastRearRight = rearRight;
     _lastFrontLeft = frontLeft;
     _lastFrontRight = frontRight;
-
     x = (((Vr + Vl) * cos(theta)) / 2.0) * time;
     y = (((Vr + Vl) * sin(theta)) / 2.0) * time;
     heading = theta * time;
+    angularVelocity = _angularVelocity;
+    linearVelocity = _linearVelocity;
 }
 
 };

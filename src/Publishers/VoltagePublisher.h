@@ -10,7 +10,7 @@
 
 namespace Publishers {
 
-class VoltagePublisher : IPublisher {
+class VoltagePublisher : public IPublisher {
 private:
     MaxBotMessages::DoubleStamped                       _v;
     std::shared_ptr<MaxBotMessages::IMessageBroker>     _messageNode;
@@ -18,7 +18,7 @@ private:
     std::shared_ptr<Sensor::ISensor<double>>   _sensor;
 public:
     VoltagePublisher(std::shared_ptr<MaxBotMessages::IMessageBroker> messageNode, const std::string topic,
-                          const std::string hardwareId, std::shared_ptr<Sensor::ISensor<double>> sensor);
+                          const std::string componentId, std::shared_ptr<Sensor::ISensor<double>> sensor);
     virtual void Publish();
 };
 

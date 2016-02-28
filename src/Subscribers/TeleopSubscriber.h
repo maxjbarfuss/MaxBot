@@ -2,7 +2,7 @@
 
 #include <chrono>
 
-#include <MessageBroker.h>
+#include <IMessageBroker.h>
 #include <Velocity.pb.h>
 
 #include <MotionControl/VelocityControl.h>
@@ -13,7 +13,7 @@ namespace Subscribers {
 
 class TeleopSubscriber {
 private:
-    std::shared_ptr<MaxBotMessages::MessageBroker>      _messageNode;
+    std::shared_ptr<MaxBotMessages::IMessageBroker>      _messageNode;
     std::string                                         _topic;
     std::shared_ptr<MotionControl::VelocityControl>     _velocityControl;
     MaxBotMessages::Velocity2Stamped                    _velocityMessage;
@@ -23,7 +23,7 @@ private:
     void UpdateVelocity(const std::string message);
     void StartWatchDog();
 public:
-    TeleopSubscriber(std::shared_ptr<MaxBotMessages::MessageBroker> messageNode, const std::string topic,
+    TeleopSubscriber(std::shared_ptr<MaxBotMessages::IMessageBroker> messageNode, const std::string topic,
                      std::shared_ptr<MotionControl::VelocityControl> velocityControl);
 };
 

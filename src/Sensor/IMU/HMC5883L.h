@@ -56,16 +56,16 @@ class HMC5883L : public ISensor<Eigen::Vector3d> {
 private:
     std::unique_ptr<IO::II2C> _i2c;
     double _scale;
-    Eigen::Vector3d _hardIronOffset;
-    Eigen::Vector3d _softIronScale;
-    Eigen::Vector3d _calibration;
+    const Eigen::Vector3d _hardIronOffset;
+    const Eigen::Vector3d _softIronScale;
 private:
+    void SetRate(uint8_t rate);
     void SetScale(uint8_t scale);
 public:
-    HMC5883L(IO::I2CFactory& i2CFactory, uint8_t scale, uint8_t rate);
-    virtual void StartCalibration();
-    virtual void StepCalibration(int step);
-    virtual void EndCalibration();
+    HMC5883L(IO::I2CFactory& i2CFactory, uint8_t scale, uint8_t mode, uint8_t rate, Eigen::Vector3d hardIron, Eigen::Vector3d softIron);
+    virtual void StartCalibration() {};
+    virtual void StepCalibration(int step) {};
+    virtual void EndCalibration() {};
     Eigen::Vector3d virtual GetReading();
 };
 

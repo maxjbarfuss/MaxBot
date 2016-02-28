@@ -9,12 +9,11 @@ void HCSR04::WaitForInterrupt(void) {
     _echoPinMutex.unlock();
 }
 
-HCSR04::HCSR04(short triggerPin, short echoPin, Computation::FilterFactory &filterFactory) : _triggerPin(triggerPin), _echoPin(echoPin) {
+HCSR04::HCSR04(short triggerPin, short echoPin) : _triggerPin(triggerPin), _echoPin(echoPin) {
     wiringPiSetup();
     pinMode(_triggerPin, OUTPUT);
     pinMode(_echoPin, INPUT);
     wiringPiISR(_echoPin, INT_EDGE_BOTH, &HCSR04::WaitForInterrupt);
-    _filter = std::move(filterFactory.GetFilter(HCSR04_MIN_RANGE, HCSR04_MAX_RANGE, HCSR04_MAX_DEVIATION, HCSR04_FILTER_SIZE));
 }
 
 void HCSR04::RunTimer() {
@@ -24,7 +23,8 @@ void HCSR04::RunTimer() {
     else _end = t;
 }
 
-void HCSR04::AddReading() {
+double HCSR04::GetReading() {
+    double retVal;
     _echoPinMutex.lock();
     auto n = HCSRO4_MIN_READ_DELAY - std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::high_resolution_clock::now() - _end).count();
     if ( n <= HCSRO4_MIN_READ_DELAY && n > 0 ) delay(n);
@@ -33,14 +33,9 @@ void HCSR04::AddReading() {
     digitalWrite(_triggerPin, LOW);
     RunTimer();
     RunTimer();
-    _filter->AddValue(std::chrono::duration_cast<std::chrono::microseconds>(_end - _begin).count() / HCSR04_MICROSECONDS_PER_METER);
+    retVal = std::chrono::duration_cast<std::chrono::microseconds>(_end - _begin).count() / HCSR04_MICROSECONDS_PER_METER;
     _echoPinMutex.unlock();
-}
-
-double HCSR04::GetReading() {
-    _filter->Clear();
-    for(int i=0; i<HCSR04_FILTER_SIZE; i++) AddReading();
-    return _filter->GetFilteredValue();
+    return retVal;
 }
 
 };

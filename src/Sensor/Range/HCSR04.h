@@ -19,7 +19,6 @@ namespace Sensor {
 #define HCSR04_MAX_RANGE                        1.5    //meters
 #define HCSR04_MIN_RANGE                        .02    //meters
 #define HCSR04_MAX_DEVIATION                    .02    //meters
-#define HCSR04_FILTER_SIZE                      3
 
 ///****************************************************************************
 /// HC-SR04 - Ultrasonic 2-400cm range sensor
@@ -35,12 +34,10 @@ private:
     short                                           _echoPin;
     std::chrono::high_resolution_clock::time_point  _begin;
     std::chrono::high_resolution_clock::time_point  _end;
-    std::unique_ptr<Computation::IFilter>           _filter;
 private:
     void RunTimer();
-    void AddReading();
 public:
-    HCSR04(short triggerPin, short echoPin, Computation::FilterFactory &filterFactory);
+    HCSR04(short triggerPin, short echoPin);
     virtual void StartCalibration() {}
     virtual void StepCalibration(int step) {}
     virtual void EndCalibration() {}
