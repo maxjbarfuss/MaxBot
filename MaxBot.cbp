@@ -47,8 +47,7 @@
 		</Linker>
 		<Unit filename="src/Computation/FilterFactory.hpp" />
 		<Unit filename="src/Computation/IFilter.h" />
-		<Unit filename="src/Computation/SimpleAverageFilter.cpp" />
-		<Unit filename="src/Computation/SimpleAverageFilter.h" />
+		<Unit filename="src/Computation/SimpleAverageFilter.hpp" />
 		<Unit filename="src/IO/I2CFactory.hpp" />
 		<Unit filename="src/IO/II2C.h" />
 		<Unit filename="src/IO/ISPI.h" />
@@ -104,6 +103,20 @@
 		<Unit filename="src/Sensor/Range/GP2Y0A710K.h" />
 		<Unit filename="src/Sensor/Range/HCSR04.cpp" />
 		<Unit filename="src/Sensor/Range/HCSR04.h" />
+		<Unit filename="src/Subscribers/AccellerometerSubscriber.cpp" />
+		<Unit filename="src/Subscribers/AccellerometerSubscriber.h" />
+		<Unit filename="src/Subscribers/AngularRate3dSubscriber.cpp" />
+		<Unit filename="src/Subscribers/AngularRate3dSubscriber.h" />
+		<Unit filename="src/Subscribers/LinearVelocity2dSubscriber.cpp" />
+		<Unit filename="src/Subscribers/LinearVelocity2dSubscriber.h" />
+		<Unit filename="src/Subscribers/LinearVelocity3dSubscriber.cpp" />
+		<Unit filename="src/Subscribers/LinearVelocity3dSubscriber.h" />
+		<Unit filename="src/Subscribers/MagnetometerSubscriber.cpp" />
+		<Unit filename="src/Subscribers/MagnetometerSubscriber.h" />
+		<Unit filename="src/Subscribers/RelativePose2dSubscriber.cpp" />
+		<Unit filename="src/Subscribers/RelativePose2dSubscriber.h" />
+		<Unit filename="src/Subscribers/RelativePose3dSubscriber.cpp" />
+		<Unit filename="src/Subscribers/RelativePose3dSubscriber.h" />
 		<Unit filename="src/Subscribers/TeleopSubscriber.cpp" />
 		<Unit filename="src/Subscribers/TeleopSubscriber.h" />
 		<Unit filename="src/main.cpp" />

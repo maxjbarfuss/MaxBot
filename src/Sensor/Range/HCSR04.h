@@ -7,7 +7,6 @@
 #include <shared_mutex>
 #include <wiringPi.h>
 
-#include <Computation/FilterFactory.hpp>
 #include <Computation/IFilter.h>
 #include <Sensor/ISensor.h>
 
@@ -27,13 +26,13 @@ namespace Sensor {
 class HCSR04 : public ISensor<double> {
 
 private:
-    static std::timed_mutex                         _echoPinMutex;
+    static std::timed_mutex _echoPinMutex;
     static void WaitForInterrupt(void);
 private:
-    short                                           _triggerPin;
-    short                                           _echoPin;
-    std::chrono::high_resolution_clock::time_point  _begin;
-    std::chrono::high_resolution_clock::time_point  _end;
+    short _triggerPin;
+    short _echoPin;
+    std::chrono::high_resolution_clock::time_point _begin;
+    std::chrono::high_resolution_clock::time_point _end;
 private:
     void RunTimer();
 public:

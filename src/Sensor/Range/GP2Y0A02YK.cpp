@@ -2,12 +2,13 @@
 #include <thread>
 #include <chrono>
 
+#include <Computation/FilterFactory.hpp>
 #include <Sensor/Range/GP2Y0A02YK.h>
 
 namespace Sensor {
 
-GP2Y0A02YK::GP2Y0A02YK(std::shared_ptr<IO::ISPI> spi, uint8_t pin, Computation::FilterFactory &filterFactory) : _spi(spi), _pin(pin) {
-    _filter = std::move(filterFactory.GetFilter(GP2Y0A02YK_MIN_RANGE, GP2Y0A02YK_MAX_RANGE, GP2Y0A02YK_MAX_DEVIATION, GP2Y0A02YK_FILTER_SIZE));
+GP2Y0A02YK::GP2Y0A02YK(std::shared_ptr<IO::ISPI> spi, uint8_t pin) : _spi(spi), _pin(pin) {
+    _filter = std::move(Computation::FilterFactory<double>::GetSimpleFilter(GP2Y0A02YK_MIN_RANGE, GP2Y0A02YK_MAX_RANGE, GP2Y0A02YK_MAX_DEVIATION, GP2Y0A02YK_FILTER_SIZE, 0));
 }
 
 double GP2Y0A02YK::GetReading() {

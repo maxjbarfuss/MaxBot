@@ -11,7 +11,7 @@ namespace Publishers {
     void VoltagePublisher::Publish() {
         auto d = _v.mutable_double_();
         d->set_value(_sensor->GetReading());
-        _v.mutable_stamp()->set_milliseconds_since_epoch(_messageNode->MillisecondsSinceEpoch());
+        _v.mutable_stamp()->set_microseconds_since_epoch(_messageNode->MicrosecondsSinceEpoch());
         _messageNode->Publish(_topic, _v);
     }
 

@@ -19,9 +19,6 @@ private:
     std::shared_ptr<MotionControl::VelocityControl>     _velocityControl;
     MaxBotMessages::Pose2Stamped                        _pose;
     MaxBotMessages::Velocity2Stamped                    _velocity;
-    double                                              _x;
-    double                                              _y;
-    double                                              _heading;
 public:
     MotionPublisher(std::shared_ptr<MaxBotMessages::IMessageBroker> messageNode, const std::string poseTopic, const std::string commandedVelocityTopic,
                     const std::string componentId, std::shared_ptr<MotionControl::VelocityControl> velocityControl);

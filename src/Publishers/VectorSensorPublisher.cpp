@@ -11,7 +11,7 @@ const std::string componentId, std::unique_ptr<Sensor::ISensor<Eigen::Vector3d>>
 void VectorSensorPublisher::Publish() {
     auto vector = _v.mutable_vector();
     auto v = _sensor->GetReading();
-    _v.mutable_stamp()->set_milliseconds_since_epoch(_messageNode->MillisecondsSinceEpoch());
+    _v.mutable_stamp()->set_microseconds_since_epoch(_messageNode->MicrosecondsSinceEpoch());
     vector->set_x(v(0));
     vector->set_y(v(1));
     vector->set_z(v(2));

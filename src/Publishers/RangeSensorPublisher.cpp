@@ -11,7 +11,7 @@ const std::string componentId, std::unique_ptr<Sensor::ISensor<double>> sensor)
 void RangeSensorPublisher::Publish() {
     auto range = _range.mutable_range();
     auto v = _sensor->GetReading();
-    _range.mutable_stamp()->set_milliseconds_since_epoch(_messageNode->MillisecondsSinceEpoch());
+    _range.mutable_stamp()->set_microseconds_since_epoch(_messageNode->MicrosecondsSinceEpoch());
     range->set_value(v);
     _messageNode->Publish(_topic, _range);
 }

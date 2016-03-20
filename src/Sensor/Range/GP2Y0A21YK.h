@@ -1,7 +1,6 @@
 #pragma once
 
 #include <IO/ISPI.h>
-#include <Computation/FilterFactory.hpp>
 #include <Computation/IFilter.h>
 #include <Sensor/ISensor.h>
 
@@ -24,11 +23,11 @@ namespace Sensor {
 ///****************************************************************************
 class GP2Y0A21YK : public ISensor<double> {
 private:
-    std::shared_ptr<IO::ISPI>               _spi;
-    uint8_t                                 _pin;
-    std::unique_ptr<Computation::IFilter>   _filter;
+    std::shared_ptr<IO::ISPI> _spi;
+    uint8_t _pin;
+    std::unique_ptr<Computation::IFilter<double>> _filter;
 public:
-    GP2Y0A21YK(std::shared_ptr<IO::ISPI> spi, uint8_t pin, Computation::FilterFactory &filterFactory);
+    GP2Y0A21YK(std::shared_ptr<IO::ISPI> spi, uint8_t pin);
     virtual void StartCalibration() {}
     virtual void StepCalibration(int step) {}
     virtual void EndCalibration() {}

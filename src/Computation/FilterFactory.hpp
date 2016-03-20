@@ -3,14 +3,15 @@
 #include <memory>
 
 #include <Computation/IFilter.h>
-#include <Computation/SimpleAverageFilter.h>
+#include <Computation/SimpleAverageFilter.hpp>
 
 namespace Computation {
 
+template <class T>
 class FilterFactory {
 public:
-    std::unique_ptr<IFilter> GetFilter(double min, double max, double max_deviation, int size) {
-        return std::make_unique<SimpleAverageFilter>(min, max, max_deviation, size);
+    static std::unique_ptr<IFilter<T>> GetSimpleFilter(T min, T max, T max_deviation, unsigned size, T defaultValue) {
+        return std::make_unique<SimpleAverageFilter<double>>(min, max, max_deviation, size, defaultValue);
     }
 };
 

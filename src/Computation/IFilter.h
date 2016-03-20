@@ -2,11 +2,12 @@
 
 namespace Computation {
 
+template <class T>
 class IFilter {
 public:
-    virtual void AddValue(double raw) = 0;
+    virtual void AddValue(T raw) = 0;
     virtual void Clear() = 0;
-    virtual double GetFilteredValue() = 0;
+    virtual T GetFilteredValue() = 0;
 };
 
 };
