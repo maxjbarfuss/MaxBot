@@ -37,6 +37,7 @@
 		<Compiler>
 			<Add option="-Wfatal-errors" />
 			<Add option="-Wall" />
+			<Add option="-std=c++14" />
 			<Add directory="/home/pi/eigen-eigen-bdd17ee3b1b3/Eigen" />
 			<Add directory="src" />
 			<Add directory="/home/pi/Development/MaxBotMessages/include" />
