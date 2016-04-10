@@ -2,67 +2,79 @@
 #include <algorithm>
 
 #include <Localization/AHRS.h>
+#include <iostream>
 
 namespace Localization {
 
-AHRS::AHRS(std::shared_ptr<MaxBotMessages::IMessageBroker> messageNode, Eigen::Quaterniond imuOrientation, Eigen::Vector3d imuOffset,
-     const std::string magnTopic, const std::string gyroTopic, const std::string accelTopic, const std::string wheelTopic, const std::string cvelTopic, const std::string ahrsTopic)
-: _messageNode(messageNode), _stepCount(0), _ahrsTopic(ahrsTopic), _lastMeasurementTime(0), _lastCalculatedTime(0) {
+#define MICROSEC_PER_SEC 1000000.0
+
+AHRS::AHRS(std::shared_ptr<MaxBotMessages::IMessageBroker> messageNode, const std::string ahrsTopic)
+: _messageNode(messageNode), _stepCount(0), _ahrsTopic(ahrsTopic), _lastCalculatedTime(0), _calcCount(0) {
     _ahrs.mutable_stamp()->set_component_id("AHRS");
-    Eigen::Vector3d v1 (1,0,0);
-    _orientation.w() = 0;
-    _orientation.vec() = v1;
-    Eigen::Vector3d v2 (0,0,0);
-    _angularRate.w() = 0;
-    _angularRate.vec() = v2;
+    _orientation.w() = 1;
+    _orientation.x() = 0;
+    _orientation.y() = 0;
+    _orientation.z() = 0;
 }
 
-void AHRS::Calculate() {
+Eigen::Vector3d AHRS::GetOrientation() {
+    Eigen::Vector3d ret;
+    double sqw = _orientation.w() * _orientation.w();
+    double sqx = _orientation.x() * _orientation.x();
+    double sqy = _orientation.y() * _orientation.y();
+    double sqz = _orientation.z() * _orientation.z();
+    ret(0) = atan2(2.0 * (_orientation.x() * _orientation.y() + _orientation.z() * _orientation.w()), (sqx - sqy - sqz + sqw));
+    ret(1) = asin(-2.0 * (_orientation.x() * _orientation.z() - _orientation.y() * _orientation.w()) / (sqx + sqy + sqz + sqw));
+    ret(2) = atan2(2.0 * (_orientation.y() * _orientation.z() + _orientation.x() * _orientation.w()), (-sqx - sqy + sqz + sqw));
+    return ret;
+}
+
+void AHRS::Calculate(long long t) {
+    Eigen::Quaterniond q = _orientation;
     std::lock_guard<std::mutex> lock(_updateMutex);
-    if(_lastCalculatedTime > 0 && _lastMeasurementTime > 0) {
-        _ahrs.mutable_stamp()->set_microseconds_since_epoch(_messageNode->MicrosecondsSinceEpoch());
-        Eigen::Vector3d v1;
-        v1 = _angularRate.vec();
-        v1 = v1 * ((_lastMeasurementTime - _lastCalculatedTime) / 1000000);
-        Eigen::Quaterniond q;
-        q = Eigen::AngleAxisd(v1.x(), Eigen::Vector3d::UnitX())
-          * Eigen::AngleAxisd(v1.y(), Eigen::Vector3d::UnitY())
-          * Eigen::AngleAxisd(v1.z(), Eigen::Vector3d::UnitZ());
-        _orientation = q * _orientation * q.inverse();
-        _orientation.normalize();
-        v1 = _orientation.vec();
-        auto v2 = _ahrs.mutable_vector();
-        v2->set_x(v1.x());
-        v2->set_y(v1.y());
-        v2->set_z(v1.z());
+    auto g = _angularRateFilter.GetFilteredValue();
+    if(_lastCalculatedTime > 0) {
+        Eigen::Vector4d qDot;
+        qDot(0) = (-q.x() * g.x() - q.y() * g.y() - q.z() * g.z()) / 2;
+        qDot(1) = ( q.w() * g.x() + q.y() * g.z() - q.z() * g.y()) / 2;
+        qDot(2) = ( q.w() * g.y() - q.x() * g.z() + q.z() * g.x()) / 2;
+        qDot(3) = ( q.w() * g.z() + q.x() * g.y() - q.y() * g.x()) / 2;
+        qDot *= ((t - _lastCalculatedTime) / MICROSEC_PER_SEC);
+        q.w() += qDot(0);
+        q.x() += qDot(1);
+        q.y() += qDot(2);
+        q.z() += qDot(3);
+        q.normalize();
     }
-   _lastCalculatedTime = _messageNode->MicrosecondsSinceEpoch();
-   _angularRateAccuracy = 0;
+    _orientation = q;
+    _lastCalculatedTime = t;
+    _angularRateFilter.Clear();
 }
 
-void AHRS::UpdateAngularRate(const std::array<double, 3> angle, const long measurementTime, double accuracy) {
-    if (measurementTime < _lastCalculatedTime) return;
+void AHRS::UpdateAngularRate(const Eigen::Vector3d angle, const long long measurementDuration, const long long measurementTime, double accuracy) {
     std::lock_guard<std::mutex> lock(_updateMutex);
-    _lastMeasurementTime = measurementTime;
-    Eigen::Vector3d v (angle[0], angle[1], angle[2]);
-    Eigen::Quaterniond q;
-    q = Eigen::AngleAxisd(v.x(), Eigen::Vector3d::UnitX())
-      * Eigen::AngleAxisd(v.y(), Eigen::Vector3d::UnitY())
-      * Eigen::AngleAxisd(v.z(), Eigen::Vector3d::UnitZ());
-    if (_angularRateAccuracy < std::numeric_limits<double>::min()) {
-        _angularRate = q;
-    } else if (accuracy >= _angularRateAccuracy) {
-        _angularRate = _angularRate.slerp(1 - _angularRateAccuracy / accuracy, q);
-    } else {
-        _angularRate = _angularRate.slerp(_angularRateAccuracy / accuracy, q);
+    //_angularRateFilter.AddValue(Eigen::Vector3d(angle[0], angle[1], angle[2]), accuracy);
+    Eigen::Quaterniond q = _orientation;
+    if(_lastCalculatedTime > 0 && measurementTime > _lastCalculatedTime) {
+        Eigen::Vector4d qDot;
+        qDot(0) = (-q.x() * angle.x() - q.y() * angle.y() - q.z() * angle.z()) / 2;
+        qDot(1) = ( q.w() * angle.x() + q.y() * angle.z() - q.z() * angle.y()) / 2;
+        qDot(2) = ( q.w() * angle.y() - q.x() * angle.z() + q.z() * angle.x()) / 2;
+        qDot(3) = ( q.w() * angle.z() + q.x() * angle.y() - q.y() * angle.x()) / 2;
+        qDot *= ((measurementTime - _lastCalculatedTime) / MICROSEC_PER_SEC);
+        q.w() += qDot(0);
+        q.x() += qDot(1);
+        q.y() += qDot(2);
+        q.z() += qDot(3);
+        q.normalize();
     }
-    _angularRateAccuracy = std::max(_angularRateAccuracy, accuracy);
-    _angularRate.normalize();
+    _orientation = q;
+    _lastCalculatedTime = measurementTime;
 }
 
-std::array<double, 3> AHRS::UpdateAbsoluteOrientation(const std::array<double, 3> angle, const long measurementTime, const double accuracy) {
+void AHRS::UpdateOrientation(const Eigen::Quaterniond orientation, const long long measurementTime, const double accuracy) {
     std::lock_guard<std::mutex> lock(_updateMutex);
-    return {0,0,0};
+    _orientation = _orientation.slerp(accuracy, orientation);
 }
 
 void AHRS::Calibrate(std::shared_ptr<Sensor::ISensor<Eigen::Vector3d>> accelerometer, std::shared_ptr<Sensor::ISensor<Eigen::Vector3d>> magnetometer) {
@@ -93,7 +105,15 @@ void AHRS::Calibrate(std::shared_ptr<Sensor::ISensor<Eigen::Vector3d>> accelerom
 }
 
 void AHRS::Publish() {
-    Calculate();
+    auto t = _messageNode->MicrosecondsSinceEpoch();
+    //Calculate(t);
+    //auto v1 = GetOrientation();
+    auto v2 = _ahrs.mutable_quaternion();
+    v2->set_w(_orientation.w());
+    v2->set_x(_orientation.x());
+    v2->set_y(_orientation.y());
+    v2->set_z(_orientation.z());
+    _ahrs.mutable_stamp()->set_microseconds_since_epoch(t);
     _messageNode->Publish(_ahrsTopic, _ahrs);
 }
 

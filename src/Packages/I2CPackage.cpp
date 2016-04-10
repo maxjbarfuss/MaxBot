@@ -9,12 +9,12 @@ namespace Packages {
 
 ///Calibration
 //Magnetometer performed 2/13/2016 with all motors running
-#define MAG_HARD_IRON_X         171.0           //gauss
-#define MAG_HARD_IRON_Y         -253.5          //gauss
-#define MAG_HARD_IRON_Z         29.0            //gauss
+#define MAG_HARD_IRON_X         193.2           //gauss
+#define MAG_HARD_IRON_Y         6.44            //gauss
+#define MAG_HARD_IRON_Z         -265.42         //gauss
 #define MAG_SOFT_IRON_X         1.0             //scale
-#define MAG_SOFT_IRON_Y         0.952381	    //scale
-#define MAG_SOFT_IRON_Z         0.95935         //scale
+#define MAG_SOFT_IRON_Y         0.96071	        //scale
+#define MAG_SOFT_IRON_Z         0.98545         //scale
 
 I2CPackage::I2CPackage() : MaxBotPackageBase() {
     IO::I2CFactory i2CFactory (std::unique_ptr<IO::I2CCreatorBase>(new IO::I2CCreator<IO::WiringPiI2C>));

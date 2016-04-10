@@ -44,10 +44,11 @@
 			<Add directory="/home/pi/zeromq-4.1.3/include" />
 		</Compiler>
 		<Linker>
-			<Add option="-lprotobuf -lzmq -lpthread" />
+			<Add option="-lprotobuf -lzmq -lpthread -lwiringPi" />
 		</Linker>
 		<Unit filename="src/Computation/FilterFactory.hpp" />
 		<Unit filename="src/Computation/IFilter.h" />
+		<Unit filename="src/Computation/ProbabalisticAverageFilter.hpp" />
 		<Unit filename="src/Computation/SimpleAverageFilter.hpp" />
 		<Unit filename="src/IO/I2CFactory.hpp" />
 		<Unit filename="src/IO/II2C.h" />

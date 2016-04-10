@@ -27,7 +27,9 @@ class HCSR04 : public ISensor<double> {
 
 private:
     static std::timed_mutex _echoPinMutex;
+    static bool _initialized;
     static void WaitForInterrupt(void);
+    static void Initialize();
 private:
     short _triggerPin;
     short _echoPin;

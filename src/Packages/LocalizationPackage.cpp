@@ -13,6 +13,7 @@ namespace Packages {
 #define IMU_ORIENTATION_Y       0.0
 #define IMU_ORIENTATION_Z       0.0
 #define GYRO_ACCURACY           .95
+#define MAGNETOMETER_ACCURACY   .02
 
 LocalizationPackage::LocalizationPackage() : MaxBotPackageBase() {
     Eigen::Quaterniond imuOrientation;
@@ -21,9 +22,10 @@ LocalizationPackage::LocalizationPackage() : MaxBotPackageBase() {
     Eigen::Quaterniond rot;
     rot = Eigen::AngleAxisd(IMU_ORIENTATION_ROT,  Eigen::Vector3d(IMU_ORIENTATION_X, IMU_ORIENTATION_Y, IMU_ORIENTATION_Z));
     imuOrientation = rot * imuOrientation * rot.inverse();
-    _ahrs = std::make_shared<Localization::AHRS>(_messageNode, imuOrientation, Eigen::Vector3d(IMU_MOUNT_X, IMU_MOUNT_Y , IMU_MOUNT_Z), "MAGN", "GYRO", "ACCEL", "WHEL", "CVEL", "AHRS");
-    _publishers.push_back(std::make_tuple(_ahrs, std::chrono::microseconds(20000), std::chrono::steady_clock::now()));
+    _ahrs = std::make_shared<Localization::AHRS>(_messageNode, "AHRS");
+    _publishers.push_back(std::make_tuple(_ahrs, std::chrono::microseconds(5000), std::chrono::steady_clock::now()));
     _gyro = std::make_unique<Subscribers::AngularRate3dSubscriber>(_messageNode, "GYRO", _ahrs, GYRO_ACCURACY);
+    _magnetometer = std::make_unique<Subscribers::MagnetometerSubscriber>(_messageNode, "MAGN", "ACEL", _ahrs, MAGNETOMETER_ACCURACY);
 }
 
 };

@@ -50,14 +50,15 @@ void HMC5883L::SetScale(uint8_t scale)
     } else {
         _scale = HMC5883L_GAIN_SCALE_8_1;
     }
-    scale &= 0x07; //only  3 bits
+    scale &= 0x07;
     _i2c->Write8(HMC5883L_REG_CFGB, scale);
 }
 
 Eigen::Vector3d HMC5883L::GetReading() {
+    //I have no idea why Z and Y are swapped
     Eigen::Vector3d v = Eigen::Vector3d(_i2c->Read16(HMC5883L_REG_DATAX),
-                                        _i2c->Read16(HMC5883L_REG_DATAY),
-                                        _i2c->Read16(HMC5883L_REG_DATAZ));
+                                        _i2c->Read16(HMC5883L_REG_DATAZ),
+                                        _i2c->Read16(HMC5883L_REG_DATAY));
     v = ((v * _scale) - _hardIronOffset);
     v(1) *= _softIronScale(1);
     v(2) *= _softIronScale(2);

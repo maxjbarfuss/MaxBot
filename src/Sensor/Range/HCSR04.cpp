@@ -2,15 +2,23 @@
 
 namespace Sensor {
 
-/// Static variables
+/// Static
 std::timed_mutex HCSR04::_echoPinMutex;
+bool HCSR04::_initialized = false;
 
 void HCSR04::WaitForInterrupt(void) {
     _echoPinMutex.unlock();
 }
 
-HCSR04::HCSR04(short triggerPin, short echoPin) : _triggerPin(triggerPin), _echoPin(echoPin) {
+void HCSR04::Initialize() {
+    if (_initialized) return;
+    _initialized = true;
     wiringPiSetup();
+}
+
+/// Non-Static
+HCSR04::HCSR04(short triggerPin, short echoPin) : _triggerPin(triggerPin), _echoPin(echoPin) {
+    Initialize();
     pinMode(_triggerPin, OUTPUT);
     pinMode(_echoPin, INPUT);
     wiringPiISR(_echoPin, INT_EDGE_BOTH, &HCSR04::WaitForInterrupt);

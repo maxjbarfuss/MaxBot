@@ -1,7 +1,5 @@
 #pragma once
 
-#include <functional>
-
 #include <Localization/AHRS.h>
 
 namespace Subscribers {
@@ -9,10 +7,9 @@ namespace Subscribers {
 class AngularRate3dSubscriber {
 private:
     std::shared_ptr<MaxBotMessages::IMessageBroker> _messageNode;
-    std::string _topic;
     std::shared_ptr<Localization::AHRS> _ahrs;
+    long long _lastMeasurementTime;
     double _accuracy;
-    MaxBotMessages::Vector3Stamped _msgVector;
 private:
     virtual void UpdateRate(const std::string s);
 public:
