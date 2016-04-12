@@ -17,16 +17,8 @@ AHRS::AHRS(std::shared_ptr<MaxBotMessages::IMessageBroker> messageNode, const st
     _orientation.z() = 0;
 }
 
-Eigen::Vector3d AHRS::GetOrientation() {
-    Eigen::Vector3d ret;
-    double sqw = _orientation.w() * _orientation.w();
-    double sqx = _orientation.x() * _orientation.x();
-    double sqy = _orientation.y() * _orientation.y();
-    double sqz = _orientation.z() * _orientation.z();
-    ret(0) = atan2(2.0 * (_orientation.x() * _orientation.y() + _orientation.z() * _orientation.w()), (sqx - sqy - sqz + sqw));
-    ret(1) = asin(-2.0 * (_orientation.x() * _orientation.z() - _orientation.y() * _orientation.w()) / (sqx + sqy + sqz + sqw));
-    ret(2) = atan2(2.0 * (_orientation.y() * _orientation.z() + _orientation.x() * _orientation.w()), (-sqx - sqy + sqz + sqw));
-    return ret;
+Eigen::Quaterniond AHRS::GetOrientation() {
+    return _orientation;
 }
 
 void AHRS::Calculate(long long t) {
@@ -74,34 +66,10 @@ void AHRS::UpdateAngularRate(const Eigen::Vector3d angle, const long long measur
 
 void AHRS::UpdateOrientation(const Eigen::Quaterniond orientation, const long long measurementTime, const double accuracy) {
     std::lock_guard<std::mutex> lock(_updateMutex);
-    _orientation = _orientation.slerp(accuracy, orientation);
-}
-
-void AHRS::Calibrate(std::shared_ptr<Sensor::ISensor<Eigen::Vector3d>> accelerometer, std::shared_ptr<Sensor::ISensor<Eigen::Vector3d>> magnetometer) {
-//    const int sampleSize = 20;
-//    Eigen::Vector3d m (0,0,0), a (0,0,0);
-//    for (int i=0; i<sampleSize; i++)
-//    {
-//        std::this_thread::sleep_for(std::chrono::milliseconds(40));
-//        m += magnetometer->GetReading();
-//        a += accelerometer->GetReading();
-//    }
-//    m /= sampleSize;
-//    //_calibratedMagnetometer.w() = 0;
-//    //_calibratedMagnetometer.vec() << m(0), m(1), m(2);
-//    a /= sampleSize;
-//    Eigen::Vector3d east = a.cross(m);
-//    Eigen::Vector3d north = east.cross(a);
-//    a.normalize();
-//    east.normalize();
-//    north.normalize();
-//    Eigen::Matrix3d mx;
-//    mx << north(0), north(1), north(2),
-//          east(0), east(1), east(2),
-//          -a(0), -a(1), -a(2);
-//    _orientation.w() = 0;
-//    _orientation.vec() << 1, 0 ,0;
-//    _orientation = _orientation * mx;
+    if (_orientation.norm() > 0 && orientation.norm() > 0)
+        _orientation = _orientation.slerp(accuracy, orientation);
+    else
+        _orientation = orientation;
 }
 
 void AHRS::Publish() {

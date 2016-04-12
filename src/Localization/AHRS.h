@@ -37,7 +37,7 @@ private:
     int _calcCount;
 public:
     AHRS(std::shared_ptr<MaxBotMessages::IMessageBroker> messageNode, const std::string ahrsTopic);
-    Eigen::Vector3d GetOrientation();
+    Eigen::Quaterniond GetOrientation();
     void Calculate(long long t);
     void Calibrate(std::shared_ptr<Sensor::ISensor<Eigen::Vector3d>> accelerometer, std::shared_ptr<Sensor::ISensor<Eigen::Vector3d>> magnetometer);
     /// ********************************************************

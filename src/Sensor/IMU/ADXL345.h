@@ -61,9 +61,9 @@ typedef enum
 class ADXL345 : public ISensor<Eigen::Vector3d> {
 
 private:
-    std::unique_ptr<IO::II2C>   _i2c;
-    Eigen::Vector3d             _average;
-    double                      _scale;
+    std::unique_ptr<IO::II2C> _i2c;
+    Eigen::Vector3d _average;
+    double _scale;
 private:
     void Start();
     void set_range(ADXL345Range_t range);

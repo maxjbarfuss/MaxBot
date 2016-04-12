@@ -5,7 +5,9 @@
 
 namespace Sensor {
 
-ADXL345::ADXL345(IO::I2CFactory& i2CFactory, ADXL345DataRate_t rate, ADXL345Range_t range) {
+ADXL345::ADXL345(IO::I2CFactory& i2CFactory, ADXL345DataRate_t rate, ADXL345Range_t range)
+: _scale(1)
+{
     _i2c = move(i2CFactory.GetI2C(ADXL345_ADDRESS));
     set_bandwidth(rate);
     set_range(range);
