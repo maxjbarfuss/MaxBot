@@ -10,7 +10,7 @@
 #include <Packages/SPIPackage.h>
 
 #include <Dense>
-#include <Localization/AHRS.h>
+#include <Localization/Pose.h>
 
 int main()
 {

@@ -1,11 +1,12 @@
+#include <algorithm>
+
 #include <MotionControl/VelocityControl.h>
-#include <iomanip>
 
 namespace MotionControl {
 
 VelocityControl::VelocityControl(std::shared_ptr<IRoboClaw> rear, std::shared_ptr<IRoboClaw> front, int rearAddress, int frontAddress, double wheelCircumference, double wheelBase, double qpr)
     :  _rear(rear), _front(front), _rearAddress(rearAddress), _frontAddress(frontAddress), _wheelCircumference(wheelCircumference), _wheelBase(wheelBase), _qpr(qpr),
-    _leftSpeed(0), _rightSpeed(0), _lastRearLeft(0), _lastRearRight(0), _lastFrontLeft(0), _lastFrontRight(0) {
+    _leftSpeed(0), _rightSpeed(0), _lastRearLeft(0), _lastRearRight(0), _lastFrontLeft(0), _lastFrontRight(0), _lastX(0), _lastY(0), _lastHeading(0) {
     _rearTime = std::chrono::steady_clock::now();
     _frontTime = std::chrono::steady_clock::now();
 }
@@ -25,8 +26,10 @@ std::tuple<int, int> VelocityControl::RunMotors(std::shared_ptr<IRoboClaw> motor
     bool valid;
     auto leftDistance = DesiredDistance(motor->ReadSpeedM1(address, &status, &valid), leftSpeed);
     auto rightDistance = DesiredDistance(motor->ReadSpeedM2(address, &status, &valid), rightSpeed);
-    motor->SpeedAccelDistanceM1M2(address, ACCELERATION, leftSpeed, std::abs(leftDistance), rightSpeed, std::abs(rightDistance), 1);
-    motor->SpeedAccelDistanceM1M2(address, ACCELERATION, 0, std::abs(leftDistance), 0, std::abs(rightDistance), 0);
+    if ((leftSpeed > MIN_VELOCITY || leftSpeed < -MIN_VELOCITY) && (rightSpeed > MIN_VELOCITY || rightSpeed < -MIN_VELOCITY)) {
+        motor->SpeedAccelDistanceM1M2(address, ACCELERATION, leftSpeed, std::abs(leftDistance), rightSpeed, std::abs(rightDistance), 1);
+        motor->SpeedAccelDistanceM1M2(address, ACCELERATION, 0, std::abs(leftDistance), 0, std::abs(rightDistance), 0);
+    }
     auto now = std::chrono::steady_clock::now();
     auto timeSinceLastTime = std::chrono::duration_cast<std::chrono::milliseconds>(now - lastTime).count();
     std::this_thread::sleep_for(std::chrono::milliseconds(static_cast<int>(STEP_TIME * 1000) - timeSinceLastTime));
@@ -54,7 +57,7 @@ void VelocityControl::SetVelocity(double linear, double angular) {
     _linearVelocity = linear;
 }
 
-void VelocityControl::RunMotors(double& x, double& y, double& heading, double& angularVelocity, double linearVelocity) {
+void VelocityControl::RunMotors(double& x, double& y, double& heading, double& angularVelocity, double& linearVelocity) {
     int frontLeft, frontRight, rearLeft, rearRight;
     bool frontSuccess = false;
     bool rearSuccess = false;
@@ -71,32 +74,28 @@ void VelocityControl::RunMotors(double& x, double& y, double& heading, double& a
     rearThread.join();
     frontThread.join();
 
-    double time = 0;
-    double Vl = 0;
-    double Vr = 0;
-    time += (rearSuccess) ? std::chrono::duration_cast<std::chrono::milliseconds>(_rearTime - lastRearTime).count() / 1000.0 : 0;
-    time += (frontSuccess) ? std::chrono::duration_cast<std::chrono::milliseconds>(_frontTime - lastFrontTime).count() / 1000.0 : 0;
-    time /= (frontSuccess && rearSuccess) ? 2.0 : 1.0;
-    if (time > (STEP_TIME / 2) && time < (STEP_TIME * 1.5)) {
-        Vl += (rearSuccess) ? (rearLeft -_lastRearLeft) : 0;
-        Vl += (frontSuccess) ? (frontLeft -_lastFrontLeft) : 0;
-        Vl /= (frontSuccess && rearSuccess) ? 2.0 : 1.0;
-        Vr += (rearSuccess) ? (rearRight -_lastRearRight) : 0;
-        Vr += (frontSuccess) ? (frontRight -_lastFrontRight) : 0;
-        Vr /= (frontSuccess && rearSuccess) ? 2.0 : 1.0;
-        Vl = ((Vl / _qpr)  * _wheelCircumference) / time;
-        Vr = ((Vr / _qpr)  * _wheelCircumference) / time;
+    if (frontSuccess && rearSuccess) {
+        double vl = 0;
+        double vr = 0;
+        double time = std::min((std::chrono::duration_cast<std::chrono::milliseconds>(_rearTime - lastRearTime).count())
+                              ,(std::chrono::duration_cast<std::chrono::milliseconds>(_frontTime - lastFrontTime).count())) / 1000.0;
+        if (time > (STEP_TIME / 2) && time < (STEP_TIME * 1.5)) {
+            vl = std::min((rearLeft -_lastRearLeft), (frontLeft -_lastFrontLeft));
+            vr = std::min((rearRight -_lastRearRight), (frontRight -_lastFrontRight));
+            vl = ((vl / _qpr)  * _wheelCircumference) / time;
+            vr = ((vr / _qpr)  * _wheelCircumference) / time;
+        }
+        double theta = (vr - vl) / _wheelBase;
+        _lastRearLeft = rearLeft;
+        _lastRearRight = rearRight;
+        _lastFrontLeft = frontLeft;
+        _lastFrontRight = frontRight;
+        x = (((vr + vl) * cos(theta)) / 2.0) * time;
+        y = (((vr + vl) * sin(theta)) / 2.0) * time;
+        heading = theta * time;
+        linearVelocity = std::sqrt(std::pow((x - _lastX), 2) + std::pow((y - _lastY), 2)) / time;
+        angularVelocity = (_lastHeading - heading) / time;
     }
-    double theta = (Vr - Vl) / _wheelBase;
-    _lastRearLeft = rearLeft;
-    _lastRearRight = rearRight;
-    _lastFrontLeft = frontLeft;
-    _lastFrontRight = frontRight;
-    x = (((Vr + Vl) * cos(theta)) / 2.0) * time;
-    y = (((Vr + Vl) * sin(theta)) / 2.0) * time;
-    heading = theta * time;
-    angularVelocity = _angularVelocity;
-    linearVelocity = _linearVelocity;
 }
 
 };

@@ -9,7 +9,7 @@ TeleopSubscriber::TeleopSubscriber(std::shared_ptr<MaxBotMessages::IMessageBroke
     _messageNode->Subscribe(_topic, [&](std::string s){ UpdateVelocity(s); });
 }
 
-void TeleopSubscriber::UpdateVelocity(const std::string message) {
+void TeleopSubscriber::UpdateVelocity(const std::string &message) {
     _lastCommand = std::chrono::high_resolution_clock::now();
     if (!_active) StartWatchDog();
     _velocityMessage.ParseFromString(message);

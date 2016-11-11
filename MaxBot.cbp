@@ -48,15 +48,15 @@
 		</Linker>
 		<Unit filename="src/Computation/FilterFactory.hpp" />
 		<Unit filename="src/Computation/IFilter.h" />
-		<Unit filename="src/Computation/ProbabalisticAverageFilter.hpp" />
 		<Unit filename="src/Computation/SimpleAverageFilter.hpp" />
+		<Unit filename="src/Computation/WeightedAverageFilter.hpp" />
 		<Unit filename="src/IO/I2CFactory.hpp" />
 		<Unit filename="src/IO/II2C.h" />
 		<Unit filename="src/IO/ISPI.h" />
 		<Unit filename="src/IO/WiringPi/WiringPiI2C.hpp" />
 		<Unit filename="src/IO/WiringPi/WiringPiSPI.hpp" />
-		<Unit filename="src/Localization/AHRS.cpp" />
-		<Unit filename="src/Localization/AHRS.h" />
+		<Unit filename="src/Localization/Pose.cpp" />
+		<Unit filename="src/Localization/Pose.h" />
 		<Unit filename="src/MotionControl/IRoboClaw.h" />
 		<Unit filename="src/MotionControl/RoboClawV4.cpp" />
 		<Unit filename="src/MotionControl/RoboClawV4.h" />
@@ -109,16 +109,10 @@
 		<Unit filename="src/Subscribers/AngularRate3dSubscriber.h" />
 		<Unit filename="src/Subscribers/ComplimentaryFilterSubscriber.cpp" />
 		<Unit filename="src/Subscribers/ComplimentaryFilterSubscriber.h" />
-		<Unit filename="src/Subscribers/LinearVelocity2dSubscriber.cpp" />
-		<Unit filename="src/Subscribers/LinearVelocity2dSubscriber.h" />
-		<Unit filename="src/Subscribers/LinearVelocity3dSubscriber.cpp" />
-		<Unit filename="src/Subscribers/LinearVelocity3dSubscriber.h" />
-		<Unit filename="src/Subscribers/RelativePose2dSubscriber.cpp" />
-		<Unit filename="src/Subscribers/RelativePose2dSubscriber.h" />
-		<Unit filename="src/Subscribers/RelativePose3dSubscriber.cpp" />
-		<Unit filename="src/Subscribers/RelativePose3dSubscriber.h" />
 		<Unit filename="src/Subscribers/TeleopSubscriber.cpp" />
 		<Unit filename="src/Subscribers/TeleopSubscriber.h" />
+		<Unit filename="src/Subscribers/WheelSpeedSubscriber.cpp" />
+		<Unit filename="src/Subscribers/WheelSpeedSubscriber.h" />
 		<Unit filename="src/main.cpp" />
 		<Extensions>
 			<code_completion />

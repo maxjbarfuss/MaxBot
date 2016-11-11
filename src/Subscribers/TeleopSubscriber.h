@@ -20,7 +20,7 @@ private:
     std::chrono::high_resolution_clock::time_point _lastCommand;
     bool _active;
 private:
-    void UpdateVelocity(const std::string message);
+    void UpdateVelocity(const std::string &message);
     void StartWatchDog();
 public:
     TeleopSubscriber(std::shared_ptr<MaxBotMessages::IMessageBroker> messageNode, const std::string topic, std::shared_ptr<MotionControl::VelocityControl> velocityControl);

@@ -12,26 +12,30 @@ namespace MotionControl {
 
 #define STEP_TIME               .06             //seconds
 #define ACCELERATION            2500            //quadrature pulses per second per second
+#define MIN_VELOCITY            60              //qpps
 
 class VelocityControl {
 private:
-    std::shared_ptr<IRoboClaw>                                      _rear;
-    std::shared_ptr<IRoboClaw>                                      _front;
-    int                                                             _rearAddress;
-    int                                                             _frontAddress;
-    double                                                          _wheelCircumference;
-    double                                                          _wheelBase;
-    double                                                          _qpr;
-    int                                                             _leftSpeed;
-    int                                                             _rightSpeed;
-    std::chrono::time_point<std::chrono::steady_clock>              _rearTime;
-    std::chrono::time_point<std::chrono::steady_clock>              _frontTime;
-    int                                                             _lastRearLeft;
-    int                                                             _lastRearRight;
-    int                                                             _lastFrontLeft;
-    int                                                             _lastFrontRight;
-    double                                                          _angularVelocity;
-    double                                                          _linearVelocity;
+    std::shared_ptr<IRoboClaw> _rear;
+    std::shared_ptr<IRoboClaw> _front;
+    int _rearAddress;
+    int _frontAddress;
+    double _wheelCircumference;
+    double _wheelBase;
+    double _qpr;
+    int _leftSpeed;
+    int _rightSpeed;
+    std::chrono::time_point<std::chrono::steady_clock> _rearTime;
+    std::chrono::time_point<std::chrono::steady_clock> _frontTime;
+    int _lastRearLeft;
+    int _lastRearRight;
+    int _lastFrontLeft;
+    int _lastFrontRight;
+    double _lastX;
+    double _lastY;
+    double _lastHeading;
+    double _angularVelocity;
+    double _linearVelocity;
 private:
     static int DesiredDistance(int currentSpeed, int desiredSpeed);
     std::tuple<int, int> RunMotors(std::shared_ptr<IRoboClaw> motor, int address, double leftSpeed, double rightSpeed, std::chrono::time_point<std::chrono::steady_clock>& lastTime);
@@ -47,7 +51,7 @@ public:
     /// call to RunMotors, plus current commanded
     /// linear and angular velocities
     /// ************************************************
-    void RunMotors(double& x, double& y, double& heading, double& angularVelocity, double linearVelocity);
+    void RunMotors(double& x, double& y, double& heading, double& angularVelocity, double& linearVelocity);
 };
 
 };

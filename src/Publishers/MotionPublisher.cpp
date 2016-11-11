@@ -6,14 +6,15 @@ MotionPublisher::MotionPublisher(std::shared_ptr<MaxBotMessages::IMessageBroker>
 const std::string componentId, std::shared_ptr<MotionControl::VelocityControl> velocityControl)
 : _messageNode(messageNode), _poseTopic(poseTopic), _velocityTopic(commandedVelocityTopic), _velocityControl(velocityControl) {
     _pose.mutable_stamp()->set_component_id(componentId);
+    _pose.mutable_stamp()->set_measurement_type(MaxBotMessages::DIFFERENTIAL);
     _velocity.mutable_stamp()->set_component_id(componentId);
 }
 
 void MotionPublisher::Publish() {
     double x=0, y=0, heading=0, angular=0, linear=0;
-    _velocity.mutable_stamp()->set_microseconds_since_epoch(_messageNode->MicrosecondsSinceEpoch());
+    _velocity.mutable_stamp()->set_time(_messageNode->Time());
     _velocityControl->RunMotors(x, y, heading, angular, linear);
-    _pose.mutable_stamp()->set_microseconds_since_epoch(_messageNode->MicrosecondsSinceEpoch());
+    _pose.mutable_stamp()->set_time(_messageNode->Time());
     auto pose = _pose.mutable_pose();
     pose->set_x(x);
     pose->set_y(y);

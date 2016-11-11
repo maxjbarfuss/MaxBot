@@ -12,6 +12,12 @@ void MaxBotPackageBase::Start() {
     std::thread t ([this](){
         while (!_stop) {
             int minRemaining = 1000000;
+            _messageNode->ProcessSubscriptions();
+            _messageNode->ProcessSubscriptions();
+            _messageNode->ProcessSubscriptions();
+            _messageNode->ProcessSubscriptions();
+            _messageNode->ProcessSubscriptions();
+            _messageNode->ProcessSubscriptions();
             for (auto & publisher : _publishers) {
                 auto elapsed = std::chrono::steady_clock::now() - std::get<2>(publisher);
                 auto delay = std::get<1>(publisher);
@@ -26,7 +32,6 @@ void MaxBotPackageBase::Start() {
                 int remaining = (delay - elapsed).count() / 1000;
                 minRemaining = std::min(remaining, minRemaining);
             }
-            _messageNode->DoWork();
             std::this_thread::sleep_for(std::chrono::microseconds(minRemaining));
         }
     });
